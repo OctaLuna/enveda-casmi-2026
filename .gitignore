@@ -90,3 +90,9 @@ logs/
 *.log
 scratch/
 
+# Agent session state & credentials
+.agents/state/
+.agent/state/
+kaggle.json
+.env
+

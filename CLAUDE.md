@@ -1,28 +1,26 @@
 # CLAUDE.md — CLI Agent Quick Reference & Developer Guide
 # Project: Enveda CASMI 2026 — Molecule ID From Mass Spectra
 
+@AGENTS.md
+
 ## Common Commands
 
 ### Environment & Setup
 - Activate virtualenv: `.venv\Scripts\activate` (Windows) or `source .venv/bin/activate` (Linux/macOS)
 - Install dependencies: `pip install -r requirements.txt`
-- Install Git hooks: `git config core.hooksPath .githooks`
+- Install Git hooks: `git config core.hooksPath .agents/git-hooks`
 
-### Running Tests
-- Run all tests: `pytest tests/ -v`
-- Run single test file: `pytest tests/test_data.py -v`
-- Run single test function: `pytest tests/test_metrics.py -k test_mrr_at_25 -v`
-- Run with test coverage: `pytest tests/ --cov=src --cov-report=term-missing`
+### Running Tests & Hooks
+- Run all unit tests: `pytest tests/ -v`
+- Run hook acceptance tests: `python .agents/bin/selftest.py`
+- Manual pre-commit check: `python .agents/bin/run_checks.py pre-commit`
+- Manual pre-push check: `python .agents/bin/run_checks.py pre-push`
+- Manual pre-submit check: `python .agents/bin/run_checks.py pre-submit`
 
 ### Linting & Formatting
-- Lint with Ruff: `ruff check src/ tests/`
-- Fix with Ruff: `ruff check --fix src/ tests/`
-- Format code: `black src/ tests/`
-- Flake8 check: `flake8 src/ tests/ --max-line-length=100`
-
-### Validation & Hooks Execution
-- Check file sizes before commit: `python .githooks/check_large_files.py`
-- Validate SDD task sync: `python -m src.utils.sdd_validator` (when configured)
+- Lint with Ruff: `ruff check src/ tests/ .agents/hooks/`
+- Fix with Ruff: `ruff check --fix src/ tests/ .agents/hooks/`
+- Format code: `black src/ tests/ .agents/hooks/`
 
 ---
 

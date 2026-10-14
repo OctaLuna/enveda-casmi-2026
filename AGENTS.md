@@ -88,7 +88,7 @@ Every agent interacting with this repository MUST adhere to the following non-ne
 
 ---
 
-## 5. Quick Command Reference
+## 5. Quick Command Reference & Hooks Verification
 
 ```bash
 # Setup environment
@@ -96,21 +96,23 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 
-# Activate Git hooks
-git config core.hooksPath .githooks
+# Activate Git hooks (multi-agent governance)
+git config core.hooksPath .agents/git-hooks
+
+# Run multi-agent hook acceptance tests (offline, stdlib)
+python .agents/bin/selftest.py
+
+# Manual verification checks (pre-commit, pre-push, pre-submit)
+python .agents/bin/run_checks.py pre-commit
+python .agents/bin/run_checks.py pre-push
+python .agents/bin/run_checks.py pre-submit
 
 # Run all unit tests
 pytest tests/ -v
 
-# Run fast unit tests with coverage
-pytest tests/ --cov=src --cov-report=term-missing
-
 # Code formatting & linting
-ruff check src/ tests/
-black --check src/ tests/
-
-# Validate pre-commit checks manually
-python .githooks/check_large_files.py
+ruff check src/ tests/ .agents/hooks/
+black --check src/ tests/ .agents/hooks/
 ```
 
 ---
@@ -119,22 +121,25 @@ python .githooks/check_large_files.py
 
 ```text
 CASMI/
-├── .agents/                 # Agent memory, skills, hooks and rules
-│   ├── rules/               # Modular operational directives
-│   ├── skills/              # Agnostic reusable skills (.md)
-│   └── hooks/               # Event hooks for agent actions
-├── .githooks/               # Git quality hooks (pre-commit, pre-push)
-├── docs/
-│   ├── constitution.md      # 6 non-negotiable principles
-│   └── scrum/               # Sprint backlogs and Dev 1/2/3 assignments
+├── .agents/                 # Centralized agent memory, hooks, skills, rules, and adapters
+│   ├── project.json         # Single source of truth for CASMI invariants
+│   ├── bin/                 # agent-hook dispatcher, selftest.py, run_checks.py
+│   ├── hooks/               # H01–H52 python hooks (safety, domain, context, quality, logging)
+│   ├── git-hooks/           # G01–G06 git hooks (pre-commit, commit-msg, pre-push, etc.)
+│   ├── rules/               # Persistent context rules (casmi-invariantes, offline, etc.)
+│   ├── workflows/           # /pre-submit, /new-experiment, /pre-pr
+│   ├── skills/              # 15 masterplan domain skills + SDD skills
+│   ├── adapters/            # Claude Code, Codex, and Antigravity templates and notes
+│   ├── state/               # session-notes.md, activity.log (gitignored)
+│   └── tests/               # Fixtures and acceptance tests for selftest.py
+├── .claude/                 # Claude Code configuration (settings.json)
+├── .codex/                  # OpenAI Codex configuration (config.toml)
+├── .github/                 # CI workflows, PR and Issue templates, CODEOWNERS
+├── docs/                    # Constitution, Scrum boards, DATA_SOURCES.md
 ├── specs/                   # Spec-Driven Development (spec, plan, tasks)
 ├── data/                    # Local datasets (raw, processed, splits - gitignored)
 ├── models/                  # Checkpoints, indices and weights (gitignored)
-├── src/                     # Production source code
-│   ├── data/                # Spectrum parsing, filtering, deisotoping, splits
-│   ├── models/              # Retrieval, fingerprint matching, de novo, ensemble
-│   ├── utils/               # Metrics (MRR@25), InChIKey14, seeds, logging
-│   └── api/                 # Inference cascade & submission generator
+├── src/                     # Production source code (data, models, utils, api)
 └── tests/                   # Pytest test suite (unit, integration, regression)
 ```
 
