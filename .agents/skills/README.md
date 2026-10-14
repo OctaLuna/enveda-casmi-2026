@@ -43,6 +43,7 @@ Operan como directivas transversales de calidad de código y gestión de proceso
 | **SDD Spec Generator** | [`sdd-spec-generator.md`](file:///d:/Octa/Documents/Proyects/CASMI/.agents/skills/sdd-spec-generator.md) | Redacción de especificaciones funcionales en sintaxis formal EARS. |
 | **Code Reviewer** | [`code-reviewer.md`](file:///d:/Octa/Documents/Proyects/CASMI/.agents/skills/code-reviewer.md) | Checklist de revisión: prevención de leakage, tipado estricto y estilo. |
 | **Hook Manager** | [`hook-manager.md`](file:///d:/Octa/Documents/Proyects/CASMI/.agents/skills/hook-manager.md) | Gestión y verificación diagnóstica de Git Hooks y Agent Hooks. |
+| **Git Branching & Commits** | [`git-branching-commit.md`](file:///d:/Octa/Documents/Proyects/CASMI/.agents/skills/git-branching-commit.md) | Topología de ramas del equipo, flujo PR y commits obligatorios en español. |
 
 ---
 
