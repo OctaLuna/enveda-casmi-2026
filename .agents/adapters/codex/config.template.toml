@@ -9,3 +9,4 @@ on_stop = "python .agents/bin/agent-hook stop --agent codex"
 
 [verification]
 pre_submit_command = "python .agents/bin/run_checks.py pre-submit"
+

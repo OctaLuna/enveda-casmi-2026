@@ -14,3 +14,4 @@
    - Estructura: `<tipo>(<scope>): <descripción concisa en imperativo y minúsculas>`.
    - Tipos: `feat`, `fix`, `exp`, `perf`, `refactor`, `test`, `docs`, `chore`, `ci`.
    - Scopes: `pilar-a`, `pilar-b`, `pilar-c`, `ensemble`, `val`, `prep`, `infra`, `docs`, `kaggle`, `agent`, `datos`, `metrica`, `reproducibilidad`.
+

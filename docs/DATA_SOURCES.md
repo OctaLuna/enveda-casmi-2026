@@ -11,3 +11,4 @@
 | **LOTUS** | https://lotus.naturalproducts.net/ | Base de ocurrencia de NPs | CC0 1.0 Universal | Por verificar | Leonardo Ibarra | Verificar versión congelada para offline. |
 | **HMDB** | https://hmdb.ca/ | Metabolitos humanos | Personal / Académica | Por verificar | Leonardo Ibarra | Posible exclusión si prohíbe uso comercial. |
 | **DreaMS Pretrained** | https://github.com/prior-lab/dreams | Pesos de modelo de embeddings | MIT / Apache 2.0 | Por verificar | Leonardo Ibarra | Confirmar licencia de los pesos publicados. |
+

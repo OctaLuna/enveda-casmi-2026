@@ -14,3 +14,4 @@
    Añadir la fila preliminar en la bitácora con la fecha, hipótesis técnica y commit inicial.
 4. **Almacenamiento de Métricas**:
    Asegurar que los resultados de MRR@25 por clase se guarden en `reports/latest_metrics.json` para que el hook `H50` los capture automáticamente.
+

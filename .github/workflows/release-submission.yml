@@ -20,3 +20,4 @@ jobs:
       - name: Validate Release Artifacts
         run: |
           python .agents/bin/run_checks.py pre-submit
+

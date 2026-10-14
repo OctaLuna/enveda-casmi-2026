@@ -33,3 +33,4 @@ jobs:
               repo: context.repo.repo,
               body: `### 📊 Reporte Automatizado de MRR@25 (CASMI 2026)\n\n${metricsText}\n\n*Nota: Verifica que los resultados estén promediados sobre al menos 3 semillas.*`
             });
+

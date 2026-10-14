@@ -8,3 +8,4 @@
   "train_molecule_ids": ["MOL_100", "MOL_001"],
   "val_molecule_ids": ["MOL_001", "MOL_002"]
 }
+

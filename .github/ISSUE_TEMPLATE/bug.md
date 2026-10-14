@@ -15,3 +15,4 @@ Explica brevemente el fallo observado o la divergencia de MRR@25.
 
 ## 🎯 Comportamiento Esperado
 ¿Qué resultado numérico o comportamiento estricto exige la especificación?
+

@@ -31,3 +31,4 @@
 - [ ] **Modo Offline**: Confirmado que no existen llamadas HTTP ni descargas remotas en el código de inferencia.
 - [ ] **Fuentes Externas**: Todas las bases o pesos están registrados en `docs/DATA_SOURCES.md` con licencia comercial válida.
 - [ ] **Suite de Pruebas**: Todos los tests unitarios pasan localmente (`pytest tests/ -v`).
+

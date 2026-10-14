@@ -18,3 +18,4 @@ Todo agente de IA o desarrollador humano que opere en este repositorio debe resp
    - Máximo 25 SMILES por fila, sin NaN ni duplicados.
 5. **Presupuesto de Cómputo de 9 Horas [H27]**:
    - El tiempo nominal total de inferencia no debe exceder 450 minutos para mantener un 20% de margen de seguridad frente al límite fatal de 540 minutos (9 horas).
+

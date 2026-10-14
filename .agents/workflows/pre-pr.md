@@ -18,3 +18,4 @@
    - Impacto en el presupuesto de cómputo (minutos agregados).
    - Fuentes de datos externas utilizadas y estado de sus licencias.
    - Declaración de conformidad offline (cero llamadas a red).
+

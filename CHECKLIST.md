@@ -56,3 +56,4 @@
 - [ ] Calibrar cascada de inferencia en `configs/budget.yaml` asegurando ejecución en $< 450$ min (margen 20% sobre 9h).
 - [ ] Catalogar todos los pesos en `kaggle/manifest.yaml` con slug, versión y SHA-256.
 - [ ] Probar generación y validación de `submission.csv` en entorno offline.
+

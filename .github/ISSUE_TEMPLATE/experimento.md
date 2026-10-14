@@ -15,3 +15,4 @@ assignees: ''
 
 ## 📈 Criterios de Éxito
 - MRR@25 esperado sobre 3 semillas:
+

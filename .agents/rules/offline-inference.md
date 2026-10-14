@@ -11,3 +11,4 @@ La evaluación final del notebook de sumisión en Kaggle se ejecuta en un conten
    - Todos los artefactos deben estar registrados en `kaggle/manifest.yaml` con su versión y hash SHA-256.
 3. **Instalación de Paquetes**:
    - Las dependencias adicionales deben suministrarse como `.whl` locales empaquetados previamente en datasets offline.
+

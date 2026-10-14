@@ -12,3 +12,4 @@
    - Límite estricto de 25 MB por archivo en Git. Extensiones prohibidas en el repo: `.parquet`, `.pt`, `.ckpt`, `.safetensors`, `.faiss`, `.index`.
 4. **Trazabilidad de Licencias Comerciales [H29]**:
    - Toda fuente de datos externa debe registrarse en `docs/DATA_SOURCES.md`. En la rama `main` no se permiten fuentes con licencia "Por verificar".
+

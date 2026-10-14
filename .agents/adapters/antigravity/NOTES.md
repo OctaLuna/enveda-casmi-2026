@@ -13,3 +13,4 @@
   2. Invocación manual o automatizada de workflows vía slash command o terminal (`python .agents/bin/run_checks.py`).
   3. **Red de Seguridad Infranqueable**: Hooks de Git locales (`.agents/git-hooks/pre-commit`, `pre-push`, `commit-msg`) configurados mediante `core.hooksPath`. Ningún cambio puede ser commiteado ni empujado a Git sin pasar las validaciones.
   4. **GitHub Actions CI**: Pipeline en `.github/workflows/ci.yml` ejecutando `selftest.py`, pytest y linters.
+
