@@ -11,11 +11,11 @@
 ### Dev 1 (Octavio Luna): Lead de Ingeniería de Features para Ensamble y Validación Cruzada
 * **Módulos**: `src/models/ensemble/feature_extractor.py`, `src/utils/cv_evaluator.py`
 * **Tareas Asignadas**:
-  1. `[DEV1-4.1]` Implementar extractor de features tabular para cada par `(query_spectrum, candidate_smiles)`:
-     - Similitud coseno DreaMS y entropía espectral (Pilar A).
-     - Similitud Tanimoto ECFP4/MIST y score COSMIC (Pilar B).
-     - Error de masa ($\Delta ppm$) y compatibilidad DBE con fórmula.
-     - Log-verosimilitud del generador DiffMS y score de cycle-consistency CFM-ID (Pilar C).
+  1. `[DEV1-4.1]` Implementar extractor de features tabular para cada par `(query_spectrum, candidate_smiles)` cubriendo las 6 familias del Masterplan §7:
+     - Similitud espectral: coseno DreaMS y entropía espectral (Pilar A).
+     - Fingerprint estructural: similitud Tanimoto MIST y score de confianza COSMIC de SIRIUS / CSI:FingerID (Pilar B).
+     - Parámetros estequiométricos: error de masa neutra ($\Delta ppm$), compatibilidad DBE y **score de confianza de la fórmula / ajuste isotópico** (mitigación de colapso §7).
+     - Generación de novo y cycle-consistency: log-verosimilitud DiffMS/MSNovelist y similitud forward espectral simulada por CFM-ID / ICEBERG (Pilar C).
   2. `[DEV1-4.2]` Construir dataset de entrenamiento del re-ranker tabular a partir de predicciones *out-of-fold* (OOF) en las 3 clases.
   3. `[DEV1-4.3]` Diseñar arnés de evaluación con 3+ semillas aleatorias de split para evitar sobreajuste al Leaderboard público (~400 moléculas).
 

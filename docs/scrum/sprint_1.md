@@ -15,9 +15,11 @@
   4. `[DEV1-1.4]` Desarrollar pipeline de limpieza de espectros en `src/data/preprocessor.py`:
      - Filtro de intensidad relativa (<1-2% pico base).
      - Filtro de precursores ($m/z > \text{precursor} + 2.0\text{ Da}$).
-     - Deisotopado explícito colapsando isotopos (+1, +2 Da).
-     - Transformación de intensidades (sqrt/log) y cálculo de masa neutra según aducto. *(Días 6-8)*
-  5. `[DEV1-1.5]` Implementar generador de splits estructurales en `src/data/splitter.py`: partición por `molecule_id` con clustering de scaffold Murcko / MCES, generando los 3 subsets: `Val-Clase1`, `Val-Clase2`, `Val-Clase3` con 3 semillas. *(Días 9-10)*
+     - Control de densidad: descarte de espectros con <5 picos y filtrado por ventanas de masa / Top-N en espectros hiper-densos (§5.1).
+     - Deisotopado explícito colapsando isotopos (+1, +2 Da a especie monoisotópica).
+     - Transformación de intensidades (sqrt/log) y cálculo de masa neutra según aducto. *(Días 6-7)*
+  5. `[DEV1-1.5]` Implementar generador de splits estructurales en `src/data/splitter.py`: partición por `molecule_id` con clustering de scaffold Murcko / MCES, generando los 3 subsets: `Val-Clase1`, `Val-Clase2`, `Val-Clase3` con 3 semillas. *(Días 8-9)*
+  6. `[DEV1-1.6]` Implementar deduplicación de espectros en `src/data/deduplicator.py`: detección y consolidación de espectros casi-idénticos (entropía/coseno $>0.99$) en entrenamiento para prevenir sesgo por moléculas sobre-representadas (§5.2). *(Día 10)*
 
 ### Dev 2 (Leonardo Ibarra): Lead de Motores de Búsqueda y Baseline Espectral
 * **Módulos**: `src/models/retrieval/base.py`, `src/models/retrieval/cosine_baseline.py`, `src/models/candidates/`
@@ -33,7 +35,7 @@
   1. `[DEV3-1.1]` Implementar formateador y validador estricto de `submission.csv` en `src/api/submission.py`: validación de hasta 25 SMILES separados por `;`, sin nulos, y verificación de que todos los `molecule_id` de test estén presentes. *(Días 2-3)*
   2. `[DEV3-1.2]` Desarrollar orquestador baseline de extremo a extremo que conecta la ingesta de Octavio, la búsqueda espectral de Leonardo y el formateador de salida. *(Días 6-8)*
   3. `[DEV3-1.3]` Construir script de benchmarking comparativo que evalúa el baseline en los 3 subsets (`Val-Clase1`, `Val-Clase2`, `Val-Clase3`) y exporta reporte en markdown. *(Día 9)*
-  4. `[DEV3-1.4]` Preparar el Notebook base de Kaggle con ejecución offline verificada (<15 min para el baseline) y generar el primer submission oficial de calibración. *(Día 10)*
+  4. `[DEV3-1.4]` Preparar el Notebook base de Kaggle con ejecución offline verificada (<15 min para el baseline), generar el primer submission oficial de calibración y registrar en `EXPERIMENTS.md` el MRR@25 público vs. local por clase. *(Día 10)*
 
 ---
 
@@ -51,7 +53,7 @@
           |                                           |
           +---------------------+---------------------+
                                 |
-[Día 6-8] Dev 1 entrega preprocessor.py y splits de datos
+[Día 6-8] Dev 1 entrega preprocessor.py, splits de datos y deduplicador
           |
           v
 [Día 9-10] Dev 2 corre baseline en Val-Clase1  <--->  Dev 3 ensambla submission.csv
@@ -62,7 +64,7 @@
 
 ## 3. Criterio de Aceptación del Sprint (DoD)
 - Cobertura de tests unitarios $>85\%$ en `src/data/` y `src/utils/`.
-- Preprocesador genera espectros limpios y reproducibles para ~2M de filas sin memory leaks.
-- Split estructural genera los 3 subsets disjuntos por `molecule_id`.
-- Submission baseline corre en Kaggle offline y devuelve un score público mayor a 0.000.
+- Preprocesador genera espectros limpios (control de densidad <5 picos, ventanas de masa y deduplicación) y reproducibles para ~2M de filas sin memory leaks.
+- Split estructural genera los 3 subsets disjuntos por `molecule_id` con $\ge 3$ semillas.
+- Submission baseline corre en Kaggle offline y devuelve un score público mayor a 0.000, registrado en `EXPERIMENTS.md`.
 

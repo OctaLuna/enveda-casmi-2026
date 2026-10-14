@@ -10,8 +10,8 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
 | Rol | Desarrollador | Dominio Principal de Código | Responsabilidades Clave |
 |---|---|---|---|
 | **Data & Validation Lead** | **Octavio Luna** *(Dev 1)* | `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py` | Ingesta de `train.parquet`/`test.parquet`, deisotopado, normalización de masa neutra según aducto, split estructural anti-leakage (MCES/Scaffold) para las 3 clases, y cálculo exacto de MRR@25 con canonicalización InChIKey14. |
-| **Retrieval & Fingerprints Lead** | **Leonardo Ibarra** *(Dev 2)* | `src/models/retrieval/`, `src/models/fingerprints/`, `src/models/candidates/` | Pilar A (Embeddings DreaMS, indexación FAISS IVF-PQ, similitud espectral y entropía) y Pilar B (Predictor neuronal MIST, consulta de universos de candidatos PubChem/COCONUT/LOTUS/HMDB y matching por Tanimoto). |
-| **Generative & Ensemble Lead** | **Joan Riveros** *(Dev 3)* | `src/models/generative/`, `src/models/forward/`, `src/models/ensemble/`, `src/api/` | Pilar C (Generador DiffMS de novo, salvaguarda MARLIN, ciclo-consistencia CFM-ID/ICEBERG), modelo de re-ranking LightGBM/XGBoost, presupuesto de inferencia en cascada (<9h) y pipeline de `submission.csv`. |
+| **Retrieval & Fingerprints Lead** | **Leonardo Ibarra** *(Dev 2)* | `src/models/retrieval/`, `src/models/fingerprints/`, `src/models/candidates/`, `src/models/generative/` | Pilar A (Embeddings DreaMS, indexación FAISS IVF-PQ, similitud espectral y entropía), Pilar B (Predictor neuronal MIST, consulta de universos PubChem/COCONUT/LOTUS/HMDB) y Generativo Secundario (MARLIN, MSNovelist). |
+| **Generative & Ensemble Lead** | **Joan Riveros** *(Dev 3)* | `src/models/generative/`, `src/models/forward/`, `src/models/ensemble/`, `src/api/` | Pilar C (Generador DiffMS de novo, ciclo-consistencia CFM-ID/ICEBERG), modelo de re-ranking LightGBM/XGBoost, presupuesto de inferencia en cascada (<9h) y pipeline de envíos de calibración y `submission.csv`. |
 
 ---
 
@@ -25,7 +25,8 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
 [14 Oct] === Sprint 1 ===> [28 Oct] === Sprint 2 ===> [11 Nov] === Sprint 3 ===> [25 Nov] === Sprint 4 ===> [14 Dic]
          Datos, Splits,            Pilar A (DreaMS/FAISS)    Pilar C (DiffMS/CFM)      Ensamble LightGBM
          InChIKey14 & Baseline     Pilar B (MIST/Fórmula)    Fusión Multi-Espectro     Inferencia Cascada <9h
-                                                                                       Kaggle Submissions
+         Envío Calibración 1       Envío Calibración 2       MSNovelist 2da Opinión    Kaggle Submissions
+                                                             Envío Calibración 3       Selección Final (14 Dic)
 ```
 
 ---

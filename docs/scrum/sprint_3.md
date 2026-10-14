@@ -14,11 +14,12 @@
   3. `[DEV1-3.3]` Preparar dataset offline curado de pares fingerprint-estructura (DSSTox, COCONUT, LOTUS) para nutrir el decodificador de DiffMS.
 
 ### Dev 2 (Leonardo Ibarra): Lead de Contingencia MARLIN y Generador De Novo
-* **Módulos**: `src/models/generative/marlin_fallback.py`, `src/models/generative/diffms_adapter.py`
+* **Módulos**: `src/models/generative/marlin_fallback.py`, `src/models/generative/diffms_adapter.py`, `src/models/generative/msnovelist_bridge.py`
 * **Tareas Asignadas**:
   1. `[DEV2-3.1]` Implementar salvaguarda tipo **MARLIN** en `src/models/generative/marlin_fallback.py`: reentrenar o ajustar la cabeza del predictor MIST para emitir secuencias moleculares directamente sin depender de una fórmula molecular garantizada.
   2. `[DEV2-3.2]` Integrar el encoder de DiffMS (`coleygroup/DiffMS`) acoplándolo con los fingerprints de MIST y restricciones estequiométricas.
   3. `[DEV2-3.3]` Desarrollar lógica de decisión que activa DiffMS si la fórmula tiene alta confianza, o MARLIN si el error de masa o patrón isotópico es ambiguo.
+  4. `[DEV2-3.4]` Integrar **MSNovelist** (vía SIRIUS 6) como segunda opinión generativa de ensamble para la Clase 3 según el Masterplan §6.3 y §9, tratando sus estructuras de novo como candidatos iniciales complementarios a DiffMS.
 
 ### Dev 3 (Joan Riveros): Lead de Decodificador de Difusión y Verificación Forward (Cycle-Consistency)
 * **Módulos**: `src/models/generative/diffms_decoder.py`, `src/models/forward/cfmid_verifier.py`
@@ -27,6 +28,7 @@
   2. `[DEV3-3.2]` Implementar el verificador forward de ciclo-consistencia en `src/models/forward/cfmid_verifier.py`: simular el espectro teórico MS/MS de cada candidato generado utilizando **CFM-ID** o **ICEBERG**.
   3. `[DEV3-3.3]` Calcular la similitud espectral entre el espectro teórico simulado y el espectro real observado para reordenar la lista de candidatos de novo.
   4. `[DEV3-3.4]` Evaluar el rendimiento en `Val-Clase3` y documentar ganancias de MRR@25 respecto a métodos aleatorios.
+  5. `[DEV3-3.5]` Generar y enviar predicción de calibración con Pilar C (de novo + cycle-consistency) a Kaggle, contrastando el score público vs. local y registrando en `EXPERIMENTS.md`. *(Día 10)*
 
 ---
 
@@ -54,6 +56,8 @@
 ## 3. Criterio de Aceptación del Sprint (DoD)
 - La fusión multi-espectro reduce la varianza espectral y mejora el MRR@25 de Pilar A y B en al menos un 5% relativo.
 - DiffMS genera 100% de estructuras químicas químicamente válidas (sin errores de valencia en RDKit).
-- La verificación forward por ciclo-consistencia (CFM-ID) mejora el ranking del candidato correcto en el top 25 de la Clase 3.
+- MSNovelist integrado como generador de novo complementario para evaluar segunda opinión en Clase 3.
+- La verificación forward por ciclo-consistencia (CFM-ID / ICEBERG) mejora el ranking del candidato correcto en el top 25 de la Clase 3.
+- Envío de calibración con Pilar C registrado en `EXPERIMENTS.md` demostrando no sobreajustar al leaderboard.
 - Todo el código opera bajo la suite de tests automatizada.
 

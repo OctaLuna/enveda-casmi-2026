@@ -16,7 +16,7 @@ DISPATCHER = BIN_DIR / "agent-hook"
 
 def run_hook_event(event: str, agent: str = "git") -> int:
     cmd = [sys.executable, str(DISPATCHER), event, "--agent", agent]
-    proc = subprocess.run(cmd)
+    proc = subprocess.run(cmd, stdin=subprocess.DEVNULL)
     return proc.returncode
 
 

@@ -9,9 +9,9 @@
 ### Dev 1 (Octavio Luna): Lead de Química Computacional y Universo de Candidatos
 * **Módulos**: `src/data/formula_estimator.py`, `src/data/candidate_db.py`, `src/data/chemical_filters.py`
 * **Tareas Asignadas**:
-  1. `[DEV1-2.1]` Implementar estimador de fórmula molecular exacta en `src/data/formula_estimator.py` a partir de masa neutra (corregida por aducto) y ratios de picos isotópicos con ventana de 5-10 ppm.
+  1. `[DEV1-2.1]` Implementar estimador de fórmula molecular exacta en `src/data/formula_estimator.py` a partir de masa neutra (corregida por aducto) y ratios de picos isotópicos con ventana de 5-10 ppm, emitiendo un score de confianza y error de masa ($\Delta ppm$) (§6.2, §7).
   2. `[DEV1-2.2]` Desarrollar filtros de restricciones químicas en `src/data/chemical_filters.py`: validación de reglas de valencia atómica de Senior y cálculo de grado de insaturación DBE (*Double Bond Equivalents*).
-  3. `[DEV1-2.3]` Construir indexador local offline de bases de candidatos (PubChem, COCONUT, LOTUS, HMDB) particionado por fórmula molecular exacta para consulta $O(1)$.
+  3. `[DEV1-2.3]` Construir indexador local offline de bases de candidatos (PubChem, COCONUT, LOTUS, HMDB) particionado por fórmula molecular exacta para consulta $O(1)$, ejecutando auditoría de licencia comercial obligatoria exigida por el Masterplan §4 y Hook `H29` en `DATA_SOURCES.md`.
   4. `[DEV1-2.4]` Implementar suite de tests para fórmulas complejas de productos naturales (alcaloides, flavonoides, glicósidos).
 
 ### Dev 2 (Leonardo Ibarra): Lead de Embeddings Fundacionales e Indexación Vectorial (Pilar A)
@@ -29,6 +29,7 @@
   2. `[DEV3-2.2]` Implementar motor de ranking de similitud de Tanimoto en `src/models/fingerprints/tanimoto_ranker.py` entre el fingerprint predicho por MIST y los fingerprints reales de los candidatos filtrados por fórmula.
   3. `[DEV3-2.3]` Crear puente de extracción de score de confianza COSMIC de SIRIUS 6 / CSI:FingerID para complementar la predicción de MIST.
   4. `[DEV3-2.4]` Validar y reportar MRR@25 del Pilar B en `Val-Clase2` (estructuras conocidas sin espectro en biblioteca).
+  5. `[DEV3-2.5]` Generar y enviar predicción de calibración combinada (Pilar A + Pilar B) a Kaggle, contrastando la mejora en el Leaderboard público vs. `Val-Clase1` y `Val-Clase2`, registrando en `EXPERIMENTS.md`. *(Día 10)*
 
 ---
 
@@ -54,5 +55,7 @@
 - Índice FAISS IVF-PQ ocupa $< 3$ GB de RAM y responde consultas top-25 en $< 15$ ms por espectro.
 - Pilar A supera MRR@25 de 0.60 en `Val-Clase1`.
 - Pilar B genera lista ordenada de 25 candidatos para cualquier fórmula molecular válida en $< 1.5$ s por consulta.
+- Auditoría legal de bases moleculares completada en `DATA_SOURCES.md` (licencias comerciales válidas confirmadas).
+- Envío de calibración de Pilar A + Pilar B ejecutado en Kaggle y registrado en `EXPERIMENTS.md`.
 - Todos los componentes corren de forma determinista y offline con tests pasando al 100%.
 
