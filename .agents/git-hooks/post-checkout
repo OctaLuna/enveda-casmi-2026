@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+"""
+G05 - post-checkout
+Wrapper que invoca las mismas verificaciones de entorno que post-merge al cambiar de rama.
+"""
+
+from pathlib import Path
+import subprocess
+import sys
+
+
+def main():
+    post_merge = Path(__file__).resolve().parent / "post-merge"
+    if post_merge.is_file():
+        subprocess.run([sys.executable, str(post_merge)])
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

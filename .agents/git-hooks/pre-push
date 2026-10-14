@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+"""
+G04 - pre-push
+Guarda de seguridad previa al envío remoto (git push):
+1. Bloquea push directo a main / master (debe pasar por develop y PR).
+2. Valida la convención de nomenclatura de ramas:
+   - Ramas autorizadas: develop, test, product, octavio, leonardo, joan
+   - O formato: (feat|fix|exp|chore|docs)/nombre-descriptivo
+3. Ejecuta la suite de verificación automatizada: H42 (tests rápidos), H20, H22, H24, H27, H28.
+"""
+
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+ALLOWED_STATIC_BRANCHES = {"develop", "test", "product", "octavio", "leonardo", "joan"}
+FEATURE_BRANCH_REGEX = r"^(feat|fix|exp|chore|docs)/[a-z0-9_\-]+$"
+
+
+def get_current_branch() -> str:
+    try:
+        proc = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True, check=False)
+        return proc.stdout.strip()
+    except Exception:
+        return ""
+
+
+def main():
+    branch = get_current_branch()
+    SCRIPT_DIR = Path(__file__).resolve().parent
+    AGENT_DIR = SCRIPT_DIR.parent
+    DISPATCHER = AGENT_DIR / "bin" / "agent-hook"
+
+    # 1. Bloqueo de push directo a main
+    # Permitir si es tag de release o si es CI, pero bloquear para desarrolladores directos
+    if branch in ("main", "master"):
+        # Comprobar si se está empujando un tag o commit directo
+        sys.stderr.write(
+            "\n[BLOQUEADO - Git Hook G04: pre-push]\n"
+            "El push directo a la rama 'main' está estrictamente prohibido.\n"
+            "  * Motivo CASMI: 'main' representa código de producción congelado y submissions verificadas.\n"
+            "  * Solución: Empuja tus cambios a 'develop' o a tu rama de desarrollador y abre un Pull Request.\n\n"
+        )
+        sys.exit(2)
+
+    # 2. Validación de nomenclatura de rama
+    if branch and branch not in ALLOWED_STATIC_BRANCHES:
+        if not re.match(FEATURE_BRANCH_REGEX, branch):
+            sys.stderr.write(
+                f"\n[BLOQUEADO - Git Hook G04: pre-push]\n"
+                f"El nombre de rama '{branch}' no sigue la convención del proyecto.\n"
+                f"  * Nombres estáticos permitidos: {ALLOWED_STATIC_BRANCHES}\n"
+                f"  * O formato de feature branch: (feat|fix|exp|chore|docs)/<nombre-en-minusculas>\n"
+                f"  * Ejemplo: git checkout -b feat/dreams-embeddings\n\n"
+            )
+            sys.exit(2)
+
+    # 3. Despachar hooks de pre-push (H42, H20, H22, H24, H27, H28)
+    if DISPATCHER.is_file():
+        proc = subprocess.run([sys.executable, str(DISPATCHER), "git_pre_push", "--agent", "git"])
+        if proc.returncode != 0:
+            sys.exit(proc.returncode)
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

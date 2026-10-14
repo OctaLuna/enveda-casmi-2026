@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+"""
+G05 - post-merge
+Detecta si los cambios integrados modificaron archivos críticos:
+- requirements.txt / lockfile -> Notifica reinstalación de entorno virtual.
+- configs/budget.yaml -> Recuerda re-validar el presupuesto de inferencia (< 9h).
+"""
+
+from pathlib import Path
+import subprocess
+import sys
+
+
+def main():
+    try:
+        proc = subprocess.run(["git", "diff", "HEAD@{1}", "HEAD", "--name-only"], capture_output=True, text=True, check=False)
+        changed_files = proc.stdout.splitlines()
+
+        for f in changed_files:
+            if "requirements" in f or "environment" in f:
+                print("\n[AVISO G05 post-merge] Se detectaron cambios en dependencias. Ejecuta 'pip install -r requirements.txt'.\n")
+                break
+
+        for f in changed_files:
+            if "budget.yaml" in f:
+                print("\n[AVISO G05 post-merge] Se actualizó configs/budget.yaml. Recuerda verificar H27 con 'run-checks.sh pre-submit'.\n")
+                break
+    except Exception:
+        pass
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

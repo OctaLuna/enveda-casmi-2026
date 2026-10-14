@@ -1,0 +1,35 @@
+name: PR Metrics Reporter
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'configs/**'
+
+jobs:
+  report-metrics:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Post Metrics Summary Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let metricsText = "No se encontró reports/latest_metrics.json en este PR.";
+            try {
+              if (fs.existsSync('reports/latest_metrics.json')) {
+                const data = JSON.parse(fs.readFileSync('reports/latest_metrics.json', 'utf8'));
+                metricsText = `| Métrica | Valor Local |\n|---|---|\n| **MRR@25 Global** | ${data.mrr_overall || data.mrr_at_25 || '-'} |\n| **Val-Clase1** | ${data.mrr_clase1 || '-'} |\n| **Val-Clase2** | ${data.mrr_clase2 || '-'} |\n| **Val-Clase3** | ${data.mrr_clase3 || '-'} |\n| **Semillas** | ${data.seeds ? data.seeds.length : 0} |`;
+              }
+            } catch(e) {}
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### 📊 Reporte Automatizado de MRR@25 (CASMI 2026)\n\n${metricsText}\n\n*Nota: Verifica que los resultados estén promediados sobre al menos 3 semillas.*`
+            });

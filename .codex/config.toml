@@ -1,0 +1,11 @@
+# Plantilla de configuracion de OpenAI Codex CLI / Agent
+[project]
+name = "enveda-casmi-2026"
+rules = ["AGENTS.md", ".agents/rules/casmi-invariantes.md"]
+
+[notifications]
+# Notificacion de finalizacion de turno para disparar H50 y H52
+on_stop = "python .agents/bin/agent-hook stop --agent codex"
+
+[verification]
+pre_submit_command = "python .agents/bin/run_checks.py pre-submit"

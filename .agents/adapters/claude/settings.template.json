@@ -1,0 +1,49 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "command": "python \".agents/bin/agent-hook\" session_start --agent claude"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "command": "python \".agents/bin/agent-hook\" prompt --agent claude"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|str_replace_editor",
+        "command": "python \".agents/bin/agent-hook\" pre_tool --agent claude"
+      },
+      {
+        "matcher": "Bash",
+        "command": "python \".agents/bin/agent-hook\" pre_tool --agent claude --tool bash"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|str_replace_editor",
+        "command": "python \".agents/bin/agent-hook\" post_tool --agent claude"
+      },
+      {
+        "matcher": "Bash",
+        "command": "python \".agents/bin/agent-hook\" post_tool --agent claude --tool bash"
+      }
+    ],
+    "PreCompact": [
+      {
+        "command": "python \".agents/bin/agent-hook\" pre_compact --agent claude"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "python \".agents/bin/agent-hook\" stop --agent claude"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "command": "python \".agents/bin/agent-hook\" stop --agent claude"
+      }
+    ]
+  }
+}

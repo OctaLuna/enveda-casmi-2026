@@ -1,0 +1,37 @@
+name: CASMI CI & Quality Gate
+
+on:
+  push:
+    branches: [ develop, test, product ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Linting & Testing Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black pytest
+
+      - name: Code Formatting & Linting Check
+        run: |
+          ruff check src/ tests/ .agents/hooks/
+          black --check src/ tests/ .agents/hooks/
+
+      - name: Run Multi-Agent Hooks Selftest
+        run: |
+          python .agents/bin/selftest.py
+
+      - name: Run Fast Unit Tests
+        run: |
+          pytest tests/ -v

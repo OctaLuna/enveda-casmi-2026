@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+"""
+G02 - commit-msg
+Valida que el mensaje de commit siga estrictamente Conventional Commits:
+<tipo>(<scope>): <descripción>
+Tipos válidos: feat, fix, exp, perf, refactor, test, docs, chore, ci
+Scopes válidos: los de project.json.scopes y ámbitos de dominio reconocidos.
+"""
+
+from pathlib import Path
+import re
+import sys
+
+# Leer archivo con el mensaje de commit
+if len(sys.argv) < 2:
+    sys.exit(0)
+
+msg_file = Path(sys.argv[1])
+if not msg_file.is_file():
+    sys.exit(0)
+
+msg = msg_file.read_text(encoding="utf-8").strip()
+# Ignorar mensajes generados automáticamente de merge o squash
+if msg.startswith("Merge branch") or msg.startswith("Merge pull request") or msg.startswith("Revert "):
+    sys.exit(0)
+
+# Primer línea del commit
+first_line = msg.splitlines()[0].strip()
+
+# Patrón Conventional Commit
+pattern = r"^(feat|fix|exp|perf|refactor|test|docs|chore|ci)\(([a-zA-Z0-9_\-]+)\):\s+(.+)$"
+match = re.match(pattern, first_line)
+
+if not match:
+    sys.stderr.write(
+        "\n[BLOQUEADO - Git Hook G02: commit-msg]\n"
+        f"El mensaje de commit '{first_line}' no cumple con Conventional Commits.\n"
+        "  * Formato obligatorio: <tipo>(<scope>): <descripción concisa>\n"
+        "  * Tipos permitidos: feat, fix, exp, perf, refactor, test, docs, chore, ci\n"
+        "  * Ejemplos válidos:\n"
+        "      feat(pilar-a): integrar indice faiss ivf-pq\n"
+        "      fix(metrica): ajustar tolerancia de tautómeros\n"
+        "      docs(scrum): actualizar actas de sprint 1\n\n"
+    )
+    sys.exit(2)
+
+sys.exit(0)

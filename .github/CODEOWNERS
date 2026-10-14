@@ -1,0 +1,12 @@
+# CODEOWNERS - Enveda CASMI 2026
+# Módulos críticos que requieren revisión obligatoria
+
+# Validación y Métricas (Dev 1 / Octavio Luna)
+src/validation/         @OctaLuna
+src/utils/metrics.py    @OctaLuna
+src/data/splitter.py    @OctaLuna
+
+# Presupuesto de Cómputo y Manifiesto de Kaggle
+configs/budget.yaml     @OctaLuna
+kaggle/manifest.yaml    @OctaLuna
+.agents/hooks/          @OctaLuna

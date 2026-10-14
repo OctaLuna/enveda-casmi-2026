@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+"""
+G03 - prepare-commit-msg
+Sugiere automáticamente un prefijo o scope para el mensaje de commit
+basándose en los archivos que se encuentran staged en Git.
+"""
+
+from pathlib import Path
+import subprocess
+import sys
+
+
+def suggest_scope() -> str:
+    try:
+        proc = subprocess.run(["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"], capture_output=True, text=True, check=False)
+        files = proc.stdout.splitlines()
+        for f in files:
+            f_norm = f.replace("\\", "/").lower()
+            if "retrieval" in f_norm or "dreams" in f_norm:
+                return "pilar-a"
+            if "fingerprint" in f_norm or "mist" in f_norm:
+                return "pilar-b"
+            if "generative" in f_norm or "diffms" in f_norm:
+                return "pilar-c"
+            if "ensemble" in f_norm:
+                return "ensemble"
+            if "data" in f_norm or "prep" in f_norm:
+                return "prep"
+            if "validation" in f_norm or "metric" in f_norm:
+                return "val"
+            if "docs" in f_norm or "readme" in f_norm:
+                return "docs"
+            if ".agent" in f_norm or "hooks" in f_norm:
+                return "agent"
+    except Exception:
+        pass
+    return ""
+
+
+def main():
+    if len(sys.argv) < 2:
+        sys.exit(0)
+
+    commit_file = Path(sys.argv[1])
+    commit_source = sys.argv[2] if len(sys.argv) > 2 else ""
+
+    # Solo sugerir si no viene mensaje predefinido (-m)
+    if commit_source in ("", "template") and commit_file.is_file():
+        scope = suggest_scope()
+        if scope:
+            existing = commit_file.read_text(encoding="utf-8")
+            if not existing.strip():
+                commit_file.write_text(f"# Sugerencia CASMI: feat({scope}): <descripcion>\n", encoding="utf-8")
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
