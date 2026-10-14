@@ -23,3 +23,4 @@ Convierte cada espectro a masa neutra (skill 03). Si todas las masas neutras coi
 - La fusión se aplica a train (para entrenar con la misma distribución) y a test; usa la misma función en ambos.
 - Cuida el desbalance: moléculas con decenas de espectros no deben dominar el entrenamiento; limita o submuestrea.
 - Verifica que la fusión mejora el MRR@25 por clase frente a no fusionar; si no mejora en una clase, desactívala allí.
+

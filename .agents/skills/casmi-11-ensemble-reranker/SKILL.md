@@ -43,3 +43,4 @@ La métrica real es MRR@25. MRR no es directamente diferenciable: usa un objetiv
 - MRR@25 final por clase y por semilla; compara con cada pilar solo para demostrar que el ensamble aporta.
 - Ablación por familia de features (quitar una familia a la vez) para saber qué señales justifican su costo de cómputo, especialmente `cc_*`.
 - Comprobar que el ranking de test usa exactamente las mismas features y el mismo preprocesado que en validación.
+

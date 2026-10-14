@@ -33,3 +33,4 @@ Dada una fórmula molecular exacta, devolver rápidamente todas las estructuras 
 ## Reglas para la validación
 - En Val-Clase3 (skill 04) la estructura verdadera debe estar **ausente** del universo; el generador del arnés debe hacer esa exclusión por InChIKey14.
 - Exige que no se filtre información del test: nunca incluyas en el universo estructuras derivadas del propio test.
+

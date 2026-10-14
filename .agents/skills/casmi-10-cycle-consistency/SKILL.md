@@ -29,3 +29,4 @@ Por candidato: `cc_cosine_mean`, `cc_cosine_max`, `cc_entropy_mean`, `cc_n_peaks
 
 ## Verificación
 Mide la ganancia incremental de MRR@25 en Val-Clase3 al añadir `cc_*` y reporta cuánto cuesta en minutos; esa relación decide cuántas moléculas y cuántos candidatos verificar dentro del presupuesto de 9 h.
+

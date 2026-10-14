@@ -32,3 +32,4 @@ Por candidato: `c_sample_freq`, `c_loglik`, `c_formula_conf`, `c_formula_rank`, 
 
 ## Verificación
 MRR@25 en Val-Clase3 por semilla. Reporta también cuántas moléculas tienen la estructura verdadera **en algún lugar** de la lista generada (recall del generador) frente al MRR final: la diferencia indica cuánto puede ganar el reranking (skills 10 y 11).
+

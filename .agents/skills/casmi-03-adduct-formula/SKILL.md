@@ -23,3 +23,4 @@ Convierte `precursor_mz` a **masa neutra M** según el aducto **antes** de estim
 ## Verificación
 - Test unitario con 10–20 moléculas de train: la fórmula verdadera (calculada desde el SMILES con RDKit) debe estar en el top-k de fórmulas estimadas; reporta el *recall@k de fórmula* por aducto. Si es bajo, es un problema de aductos/tolerancia, no del modelo.
 - Compara con SIRIUS (decomposición de fórmula) como referencia cruzada si está disponible.
+

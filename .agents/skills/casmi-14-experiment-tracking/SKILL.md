@@ -29,3 +29,4 @@ Mantén un archivo único (`experiments/log.csv` o similar) con una fila por env
 
 ## Cuotas
 Consulta en Kaggle el número máximo de envíos por día y planifícalos; guarda envíos para las últimas dos semanas, cuando más se necesitan.
+

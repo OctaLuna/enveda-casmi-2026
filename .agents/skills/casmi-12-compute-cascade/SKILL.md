@@ -34,3 +34,4 @@ Máximo **9 h** (CPU o GPU) por ejecución, sin internet. Con ~400 moléculas, l
 
 ## Verificación
 Ejecuta el notebook completo, de extremo a extremo, **con internet desactivado**, y comprueba que termina en ≲ 80 % del límite (≈ 7.2 h) antes de dar el pipeline por válido.
+

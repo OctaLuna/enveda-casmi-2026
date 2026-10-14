@@ -31,3 +31,4 @@ Por candidato: `b_tanimoto_soft`, `b_cosine_fp`, `b_rank_in_formula`, `b_n_candi
 
 ## Verificación
 MRR@25 en Val-Clase2 por semilla; desglosa por tamaño del conjunto de candidatos de la fórmula y por confianza de fórmula para ver dónde falla. Reporta también el *recall@25* del universo (¿está la estructura verdadera entre los candidatos?): si el recall del universo es bajo, el cuello de botella son las bases de datos, no el modelo.
+

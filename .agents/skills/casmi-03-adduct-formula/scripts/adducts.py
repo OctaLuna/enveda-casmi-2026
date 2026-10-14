@@ -106,3 +106,4 @@ if __name__ == "__main__":
     hits = decompose(M, ppm=3)
     assert any(h["formula"] == "C8H10N4O2" for h in hits)
     print("adducts selftest OK; candidatos:", [h["formula"] for h in hits[:5]])
+

@@ -32,3 +32,4 @@ Por candidato: `a_cos_dreams`, `a_entropy_sim`, `a_rank`, `a_n_matching_spectra`
 - MRR@25 en Val-Clase1 (skill 04) por semilla; compáralo con la búsqueda clásica por coseno sin DreaMS para cuantificar la ganancia.
 - Comprueba que no hay fuga: el espectro *query* no debe estar en el índice.
 - **Primer submit temprano:** una línea base con solo el Pilar A valida todo el flujo de entrega (skill 13).
+

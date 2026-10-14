@@ -35,3 +35,4 @@ Notebooks de Kaggle obligatorios, ≤ 9 h, **internet desactivado** en la re-eje
 - [ ] Versión de RDKit idéntica a la de validación.
 - [ ] Resultados registrados en la skill 14.
 - [ ] Notebook final seleccionado para la evaluación antes del cierre (14-dic, 11:59 PM UTC); no dejes la selección para el último minuto.
+

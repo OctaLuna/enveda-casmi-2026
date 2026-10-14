@@ -36,3 +36,4 @@ Tabla por (semilla, clase): `n_moléculas`, `MRR@25`, `top1`, `top5`, `top25_rec
 
 ## Uso en decisiones
 El leaderboard será aproximadamente un promedio ponderado por la proporción real (desconocida) de cada clase. Usa los tres números para decidir **dónde invertir**: si Clase 3 es la más débil y la más probable según el leaderboard público, prioriza los pilares C y 10; si la Clase 1 domina, prioriza el pilar A. Estima la proporción real contrastando el MRR público con los MRR por clase (skill 14).
+
