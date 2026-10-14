@@ -34,8 +34,8 @@ def test_set_seed_torch_determinism():
         t2 = torch.rand(5)
 
         assert torch.equal(t1, t2)
-    except ImportError:
-        pytest.skip("PyTorch not installed in test environment")
+    except (ImportError, OSError):
+        pytest.skip("PyTorch not installed or functional in test environment")
 
 
 def test_set_seed_different_seeds_produce_different_values():
