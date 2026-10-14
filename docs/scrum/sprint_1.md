@@ -65,3 +65,4 @@
 - Preprocesador genera espectros limpios y reproducibles para ~2M de filas sin memory leaks.
 - Split estructural genera los 3 subsets disjuntos por `molecule_id`.
 - Submission baseline corre en Kaggle offline y devuelve un score público mayor a 0.000.
+

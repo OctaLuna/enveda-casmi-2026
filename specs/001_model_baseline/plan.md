@@ -78,3 +78,4 @@ El test oculto de Kaggle contiene ~400 moléculas distribuidas en 3 clases. Para
 | Incompatibilidad de versión de RDKit con Kaggle | Crítica | Anclar versión a `2026.03.3` (o la más reciente compatible) y encapsular `TautomerEnumerator` en `metrics.py`. |
 | Desbordamiento de memoria RAM al cargar 2M espectros | Media | Carga diferida por batches o streaming con PyArrow IPC / Parquet chunking. |
 | Error en formato de `submission.csv` | Crítica | Validador automatizado `validate_submission_csv()` ejecutado como test de integración previo al envío. |
+

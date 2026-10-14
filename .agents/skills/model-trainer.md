@@ -66,3 +66,4 @@ Todo pipeline de entrenamiento en CASMI 2026 (fine-tuning DreaMS, MIST fingerpri
 - Usar `torch.cuda.empty_cache()` entre épocas de evaluación.
 - Implementar `torch.cuda.amp.autocast()` para entrenamiento en precisión mixta (FP16/BF16) y reducir uso de VRAM.
 - En Kaggle (máximo 9 horas), estimar previamente el tiempo por epoch para asegurar que el job no sea terminado por timeout.
+

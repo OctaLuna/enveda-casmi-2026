@@ -11,3 +11,4 @@
    - `tests/`: Automated unit tests covering edge cases.
    - `src/`: Clean, minimal production implementation that makes the tests pass.
 3. **No Unverified Completions**: Never mark a task `[x]` in `tasks.md` without running its corresponding unit tests and observing exit code 0.
+

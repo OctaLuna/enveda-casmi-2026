@@ -56,3 +56,4 @@
 - DiffMS genera 100% de estructuras químicas químicamente válidas (sin errores de valencia en RDKit).
 - La verificación forward por ciclo-consistencia (CFM-ID) mejora el ranking del candidato correcto en el top 25 de la Clase 3.
 - Todo el código opera bajo la suite de tests automatizada.
+

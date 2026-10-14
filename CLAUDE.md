@@ -42,3 +42,4 @@
    - Dev 2: Pilar A (Retrieval / DreaMS) & Pilar B (Fingerprints / MIST / Formula Matching).
    - Dev 3: Pilar C (De Novo DiffMS / CFM-ID) & Final Re-ranker (LightGBM).
    - Do not edit modules belonging to another developer without an interface contract change.
+

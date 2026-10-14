@@ -24,3 +24,4 @@
 
 3. **Registro de Auditoría**:
    En el commit o resumen de turno, el agente debe reportar el comando ejecutado y la confirmación del paso exitoso del test.
+

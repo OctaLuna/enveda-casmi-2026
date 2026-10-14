@@ -57,3 +57,4 @@
 - El ensamble LightGBM mejora el MRR@25 global frente a cualquiera de los tres pilares de forma aislada.
 - El notebook de Kaggle corre de forma 100% offline (sin internet) y genera un `submission.csv` estrictamente válido.
 - Se documenta el reporte final comparativo de MRR@25 por clase: local vs. leaderboard público.
+

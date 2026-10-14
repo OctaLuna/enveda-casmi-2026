@@ -64,3 +64,4 @@
 * **Reglas de Interfaz**:
   * La comunicación entre módulos se realiza exclusivamente a través de interfaces tipadas (dataclasses/Pydantic) definidas previamente en `specs/`.
   * Trabajo en ramas feature (`feature/<sprint>-<dev>-<nombre>`), PRs con revisión de código obligatoria y prohibición de commits directos sobre la rama `main`.
+

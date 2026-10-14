@@ -8,7 +8,21 @@
 ---
 
 ## 1. Propósito y Alcance
-Esta especificación define los requisitos funcionales y no funcionales para la ingestión inicial de `train.parquet` y `test.parquet`, la limpieza física y normalización espectral, la partición anti-leakage que simula las 3 clases del test oculto de Kaggle, la canonicalización estándar InChIKey14 con RDKit y el modelo baseline de recuperación espectral.
+
+### 1.1 Dentro de Alcance (In-Scope)
+Esta especificación define los requisitos formales funcionales y no funcionales para:
+- Ingestión inicial estructurada de `train.parquet` y `test.parquet`.
+- Limpieza física, filtrado de ruido (<1% pico base), eliminación de overhang de precursor y deisotopado explícito.
+- Normalización por tipo de aducto a masa neutra exacta.
+- Partición anti-leakage por `molecule_id` y clustering estructural por scaffold de Murcko simulando las 3 clases del test oculto de Kaggle (`Val-Clase1`, `Val-Clase2`, `Val-Clase3`) con 3 semillas.
+- Canonicalización estándar de tautómeros a InChIKey14 con RDKit `rdMolStandardize.TautomerEnumerator`.
+- Implementación de la métrica oficial MRR@25.
+- Motor de recuperación espectral baseline y formateador validado de `submission.csv`.
+
+### 1.2 Fuera de Alcance (Out-of-Scope)
+- **Modelos Generativos De Novo (Pilar C)**: El entrenamiento e inferencia de difusión discreta (DiffMS) y ciclo-consistencia (CFM-ID) se difieren formalmente al Sprint 3 (`SPEC-003`).
+- **Conectividad a Red**: Queda estrictamente fuera de alcance cualquier llamada HTTP o acceso a internet en tiempo de inferencia; todo el pipeline opera 100% offline para paridad estricta con Kaggle.
+- **Resolución Enantiomérica/Quiral**: La resolución de estereocentros queda fuera de alcance dado que el evaluador oficial canonicaliza formas tautoméricas y compara únicamente el bloque InChIKey14 sin penalización estereoquímica.
 
 ---
 
@@ -26,6 +40,8 @@ Esta especificación define los requisitos funcionales y no funcionales para la 
 * **[REQ-EVT-03]**: CUANDO el generador de splits cree las particiones locales, el sistema debe agrupar los datos por `molecule_id` asegurando que ninguna molécula pertenezca simultáneamente a train y a validation.
 * **[REQ-EVT-04]**: CUANDO el split de validación configure el subset `Val-Clase3`, el sistema debe aislar estructuras químicas con scaffolds de Murcko disjuntos y similitud Tanimoto ECFP4 $< 0.40$ respecto al train.
 * **[REQ-EVT-05]**: CUANDO el baseline reciba un espectro de query, el motor de inferencia debe recuperar hasta 25 candidatos únicos ordenados por similitud de precursor y fragmentos.
+* **[REQ-EVT-06]**: CUANDO el preprocesador detecte patrones de picos isotópicos adyacentes (+1.0 Da, +2.0 Da), el sistema debe colapsar dichos picos a su especie monoisotópica principal antes del binning o cálculo de embeddings.
+* **[REQ-EVT-07]**: CUANDO se procese el campo `adduct`, el sistema debe normalizar `precursor_mz` a masa neutra exacta del analito antes de realizar cualquier estimación de fórmula molecular.
 
 ### 2.3 Requisitos Basados en Estado (State-Driven Requirements)
 * **[REQ-STA-01]**: MIENTRAS el sistema opere en modo de evaluación offline de Kaggle, el pipeline debe resolver las consultas utilizando únicamente artefactos de datos locales sin realizar conexiones de red.

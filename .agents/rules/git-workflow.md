@@ -13,3 +13,4 @@
    - Main branch is protected: `main`.
    - Feature branches: `feature/sprint<N>-<dev>-<topic>`.
    - Before opening PR, rebase on latest `main` and execute `pytest tests/ -v`.
+

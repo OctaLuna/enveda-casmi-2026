@@ -55,3 +55,4 @@
 - Pilar A supera MRR@25 de 0.60 en `Val-Clase1`.
 - Pilar B genera lista ordenada de 25 candidatos para cualquier fórmula molecular válida en $< 1.5$ s por consulta.
 - Todos los componentes corren de forma determinista y offline con tests pasando al 100%.
+

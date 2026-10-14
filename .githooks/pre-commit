@@ -34,3 +34,4 @@ fi
 
 echo "=== [CASMI Hook: pre-commit] All checks passed successfully! ==="
 exit 0
+

@@ -41,3 +41,4 @@ Los requisitos funcionales deben redactarse siguiendo estrictamente uno de los 5
   `- [ ] [DEV-ID] [MOD-ID] Tarea concreta con definición de completitud (DoD)`
 - **Dependencias**: Indicar explícitamente si una tarea depende de otra (ej. `(Bloqueada por Task 1.2)`).
 - **Protocolo de Cierre**: Prohibido marcar `[x]` si el test unitario asociado no ha sido escrito y ejecutado con éxito (`pytest tests/test_... -v`).
+

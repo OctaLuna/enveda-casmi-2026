@@ -60,3 +60,4 @@ python .githooks/check_large_files.py
 # 3. Test de suite de pruebas
 pytest tests/ -v
 ```
+

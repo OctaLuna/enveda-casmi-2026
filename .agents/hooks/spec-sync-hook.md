@@ -21,3 +21,4 @@
 
 3. **Prevención de Vibe Coding**:
    - Este hook neutraliza la improvisación de código, protegiendo las interfaces entre Dev 1, Dev 2 y Dev 3 contra roturas inesperadas.
+

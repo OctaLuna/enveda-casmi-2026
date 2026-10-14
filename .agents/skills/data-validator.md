@@ -53,3 +53,4 @@ El validador debe emitir un log estructurado en formato JSON o Markdown que espe
 - Total de filas analizadas y espectros descartados (con causa).
 - Número de moléculas únicas y ratio de espectros por molécula.
 - Verificación del hash de integridad de los archivos particionados.
+

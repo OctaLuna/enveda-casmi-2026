@@ -38,3 +38,4 @@
 ## 5. Estilo y Limpieza
 - [ ] **Ruff & Black**: ¿El código pasa `ruff check` y está formateado con `black` sin errores?
 - [ ] **Type Hints**: ¿Las funciones públicas cuentan con anotaciones de tipo completas (`list[str]`, `dict[str, Any]`, `np.ndarray`, etc.)?
+

@@ -49,3 +49,4 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
 - **Daily Standup Asíncrono (10 min)**: Qué completé ayer, qué haré hoy, qué me bloquea.
 - **Sprint Planning (Inicio de Sprint)**: Refinamiento de `tasks.md` en sintaxis SDD y ajuste de dependencias.
 - **Sprint Review & Leaderboard Sync (Fin de Sprint)**: Evaluación de MRR@25 local en los 3 subsets vs. envío de calibración a Kaggle.
+
