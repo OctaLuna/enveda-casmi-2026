@@ -6,7 +6,7 @@
 
 ## 1. Reparto Equitativo de Tareas
 
-### Dev 1: Lead de Datos, Preprocesamiento y Métrica InChIKey14
+### Dev 1 (Octavio Luna): Lead de Datos, Preprocesamiento y Métrica InChIKey14
 * **Módulos**: `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py`
 * **Tareas Asignadas**:
   1. `[DEV1-1.1]` Implementar `src/utils/reproducibility.py` con `set_seed()` fijando Python, NumPy y PyTorch. *(Día 1)*
@@ -19,7 +19,7 @@
      - Transformación de intensidades (sqrt/log) y cálculo de masa neutra según aducto. *(Días 6-8)*
   5. `[DEV1-1.5]` Implementar generador de splits estructurales en `src/data/splitter.py`: partición por `molecule_id` con clustering de scaffold Murcko / MCES, generando los 3 subsets: `Val-Clase1`, `Val-Clase2`, `Val-Clase3` con 3 semillas. *(Días 9-10)*
 
-### Dev 2: Lead de Motores de Búsqueda y Baseline Espectral
+### Dev 2 (Leonardo Ibarra): Lead de Motores de Búsqueda y Baseline Espectral
 * **Módulos**: `src/models/retrieval/base.py`, `src/models/retrieval/cosine_baseline.py`, `src/models/candidates/`
 * **Tareas Asignadas**:
   1. `[DEV2-1.1]` Definir contratos de datos compartidos `SpectrumRecord` y `CandidatePrediction` en `src/models/interfaces.py` para desacoplar dependencias. *(Día 1)*
@@ -27,11 +27,11 @@
   3. `[DEV2-1.3]` Desarrollar indexador de búsqueda baseline en memoria sobre espectros de entrenamiento limpios. *(Días 6-8)*
   4. `[DEV2-1.4]` Ejecutar benchmark del baseline de coseno sobre `Val-Clase1` reportando MRR@25 inicial. *(Días 9-10)*
 
-### Dev 3: Lead de Pipeline de Inferencia, Submisión y Validación
+### Dev 3 (Joan Riveros): Lead de Pipeline de Inferencia, Submisión y Validación
 * **Módulos**: `src/api/submission.py`, `src/models/baseline_agent.py`, `tests/`
 * **Tareas Asignadas**:
   1. `[DEV3-1.1]` Implementar formateador y validador estricto de `submission.csv` en `src/api/submission.py`: validación de hasta 25 SMILES separados por `;`, sin nulos, y verificación de que todos los `molecule_id` de test estén presentes. *(Días 2-3)*
-  2. `[DEV3-1.2]` Desarrollar orquestador baseline de extremo a extremo que conecta la ingesta de Dev 1, la búsqueda espectral de Dev 2 y el formateador de salida. *(Días 6-8)*
+  2. `[DEV3-1.2]` Desarrollar orquestador baseline de extremo a extremo que conecta la ingesta de Octavio, la búsqueda espectral de Leonardo y el formateador de salida. *(Días 6-8)*
   3. `[DEV3-1.3]` Construir script de benchmarking comparativo que evalúa el baseline en los 3 subsets (`Val-Clase1`, `Val-Clase2`, `Val-Clase3`) y exporta reporte en markdown. *(Día 9)*
   4. `[DEV3-1.4]` Preparar el Notebook base de Kaggle con ejecución offline verificada (<15 min para el baseline) y generar el primer submission oficial de calibración. *(Día 10)*
 

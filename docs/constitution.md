@@ -55,13 +55,14 @@
 
 ---
 
-### Principio 6: Colaboración Git Sin Conflictos para 3 Desarrolladores
+### Principio 6: Colaboración Git Sin Conflictos para 3 Desarrolladores y Commits en Español
 * **Mandato**: La arquitectura de código y la división del trabajo deben garantizar un flujo de integración continua sin bloqueos ni merge conflicts destructivos.
 * **Distribución de Dominios**:
-  * **Dev 1 (Data & Validation Core)**: `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py`, tests de datos y validación de splits.
-  * **Dev 2 (Retrieval & Fingerprints - Pilares A y B)**: `src/models/retrieval/` (DreaMS, FAISS), `src/models/fingerprints/` (MIST, SIRIUS/COSMIC), matching de candidatos en bases externas.
-  * **Dev 3 (Generative De Novo & Ensembling - Pilar C y Submission)**: `src/models/generative/` (DiffMS, MARLIN), `src/models/forward/` (CFM-ID/ICEBERG), `src/models/ensemble/` (LightGBM/XGBoost) y `src/api/submission.py`.
-* **Reglas de Interfaz**:
+  * **Octavio Luna (Dev 1 - Data & Validation Core)**: `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py`, tests de datos y validación de splits.
+  * **Leonardo Ibarra (Dev 2 - Retrieval & Fingerprints)**: `src/models/retrieval/` (DreaMS, FAISS), `src/models/fingerprints/` (MIST, SIRIUS/COSMIC), matching de candidatos en bases externas.
+  * **Joan Riveros (Dev 3 - Generative De Novo & Ensembling)**: `src/models/generative/` (DiffMS, MARLIN), `src/models/forward/` (CFM-ID/ICEBERG), `src/models/ensemble/` (LightGBM/XGBoost) y `src/api/submission.py`.
+* **Reglas de Interfaz y Commits**:
   * La comunicación entre módulos se realiza exclusivamente a través de interfaces tipadas (dataclasses/Pydantic) definidas previamente en `specs/`.
-  * Trabajo en ramas feature (`feature/<sprint>-<dev>-<nombre>`), PRs con revisión de código obligatoria y prohibición de commits directos sobre la rama `main`.
+  * Todo commit debe redactarse obligatoriamente en **ESPAÑOL** siguiendo Conventional Commits (`feat(datos): ...`, `fix(metrica): ...`, `test(reproducibilidad): ...`).
+  * Trabajo en ramas feature (`feature/<sprint>-<dev>-<nombre>`), PRs con revisión de código obligatoria y prohibición de commits directos sobre las ramas protegidas `main` y `develop`.
 

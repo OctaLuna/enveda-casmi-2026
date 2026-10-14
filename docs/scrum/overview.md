@@ -9,9 +9,9 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
 
 | Rol | Desarrollador | Dominio Principal de Código | Responsabilidades Clave |
 |---|---|---|---|
-| **Data & Validation Lead** | **Dev 1** | `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py` | Ingesta de `train.parquet`/`test.parquet`, deisotopado, normalización de masa neutra según aducto, split estructural anti-leakage (MCES/Scaffold) para las 3 clases, y cálculo exacto de MRR@25 con canonicalización InChIKey14. |
-| **Retrieval & Fingerprints Lead** | **Dev 2** | `src/models/retrieval/`, `src/models/fingerprints/`, `src/models/candidates/` | Pilar A (Embeddings DreaMS, indexación FAISS IVF-PQ, similitud espectral y entropía) y Pilar B (Predictor neuronal MIST, consulta de universos de candidatos PubChem/COCONUT/LOTUS/HMDB y matching por Tanimoto). |
-| **Generative & Ensemble Lead** | **Dev 3** | `src/models/generative/`, `src/models/forward/`, `src/models/ensemble/`, `src/api/` | Pilar C (Generador DiffMS de novo, salvaguarda MARLIN, ciclo-consistencia CFM-ID/ICEBERG), modelo de re-ranking LightGBM/XGBoost, presupuesto de inferencia en cascada (<9h) y pipeline de `submission.csv`. |
+| **Data & Validation Lead** | **Octavio Luna** *(Dev 1)* | `src/data/`, `src/utils/metrics.py`, `src/utils/reproducibility.py` | Ingesta de `train.parquet`/`test.parquet`, deisotopado, normalización de masa neutra según aducto, split estructural anti-leakage (MCES/Scaffold) para las 3 clases, y cálculo exacto de MRR@25 con canonicalización InChIKey14. |
+| **Retrieval & Fingerprints Lead** | **Leonardo Ibarra** *(Dev 2)* | `src/models/retrieval/`, `src/models/fingerprints/`, `src/models/candidates/` | Pilar A (Embeddings DreaMS, indexación FAISS IVF-PQ, similitud espectral y entropía) y Pilar B (Predictor neuronal MIST, consulta de universos de candidatos PubChem/COCONUT/LOTUS/HMDB y matching por Tanimoto). |
+| **Generative & Ensemble Lead** | **Joan Riveros** *(Dev 3)* | `src/models/generative/`, `src/models/forward/`, `src/models/ensemble/`, `src/api/` | Pilar C (Generador DiffMS de novo, salvaguarda MARLIN, ciclo-consistencia CFM-ID/ICEBERG), modelo de re-ranking LightGBM/XGBoost, presupuesto de inferencia en cascada (<9h) y pipeline de `submission.csv`. |
 
 ---
 
@@ -32,16 +32,23 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
 
 ## 3. Protocolo de Git y Prevención de Merge Conflicts
 
-1. **Ramas Protegidas**: La rama `main` está protegida; ningún desarrollador puede hacer `git push origin main` directamente.
-2. **Nomenclatura de Ramas**:
-   - `feature/sprint<N>-dev1-<feature>`
-   - `feature/sprint<N>-dev2-<feature>`
-   - `feature/sprint<N>-dev3-<feature>`
-3. **Contratos de Interfaz Tipados**:
-   - Dev 2 y Dev 3 consumen los objetos de espectro generados por Dev 1 a través de dataclasses compartidas (`SpectrumData`, `CandidateMatch`).
-   - Dev 3 consume las listas de candidatos de Dev 2 mediante la interfaz estandarizada `RankedCandidate`.
-4. **Integración Continua Local**:
-   - Todo PR exige la aprobación de al menos otro desarrollador y la ejecución exitosa de los hooks `pre-commit` y `pre-push`.
+1. **Ramas Troncales**:
+   - `main`: Producción oficial y submissions finales verificadas (protegida).
+   - `develop`: Integración continua de features completadas (protegida).
+   - `test`: Banco de pruebas de estrés offline y benchmarks de 9 horas.
+2. **Ramas de Desarrollador**:
+   - `dev/octavio` (Octavio Luna)
+   - `dev/leonardo` (Leonardo Ibarra)
+   - `dev/joan` (Joan Riveros)
+3. **Nomenclatura de Feature Branches**:
+   - `feature/sprint<N>-octavio-<feature>`
+   - `feature/sprint<N>-leonardo-<feature>`
+   - `feature/sprint<N>-joan-<feature>`
+4. **Contratos de Interfaz Tipados**:
+   - Leonardo y Joan consumen los objetos de espectro generados por Octavio a través de dataclasses compartidas (`SpectrumRecord`, `CandidateMatch`).
+   - Joan consume las listas de candidatos de Leonardo mediante la interfaz estandarizada `RankedCandidate`.
+5. **Integración Continua Local**:
+   - Todo PR hacia `develop` exige la aprobación de al menos otro desarrollador y la ejecución exitosa de los hooks `pre-commit` y `pre-push`.
 
 ---
 

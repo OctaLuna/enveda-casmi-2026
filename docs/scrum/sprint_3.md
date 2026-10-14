@@ -6,21 +6,21 @@
 
 ## 1. Reparto Equitativo de Tareas
 
-### Dev 1: Lead de Fusión Multi-Espectro y Datos de Preentrenamiento
+### Dev 1 (Octavio Luna): Lead de Fusión Multi-Espectro y Datos de Preentrenamiento
 * **Módulos**: `src/data/multi_spectrum_fusion.py`, `src/data/collision_energy_analyzer.py`
 * **Tareas Asignadas**:
   1. `[DEV1-3.1]` Implementar agregador multi-espectro en `src/data/multi_spectrum_fusion.py`: promediar embeddings y alinear espectros de todos los `spectrum_id` correspondientes a un mismo `molecule_id` ponderando por número de picos y relación señal/ruido.
   2. `[DEV1-3.2]` Desarrollar analizador de persistencia de picos a través de energías de colisión en `src/data/collision_energy_analyzer.py` para aislar subestructuras robustas y confirmar fórmula.
   3. `[DEV1-3.3]` Preparar dataset offline curado de pares fingerprint-estructura (DSSTox, COCONUT, LOTUS) para nutrir el decodificador de DiffMS.
 
-### Dev 2: Lead de Contingencia MARLIN y Generador De Novo
+### Dev 2 (Leonardo Ibarra): Lead de Contingencia MARLIN y Generador De Novo
 * **Módulos**: `src/models/generative/marlin_fallback.py`, `src/models/generative/diffms_adapter.py`
 * **Tareas Asignadas**:
   1. `[DEV2-3.1]` Implementar salvaguarda tipo **MARLIN** en `src/models/generative/marlin_fallback.py`: reentrenar o ajustar la cabeza del predictor MIST para emitir secuencias moleculares directamente sin depender de una fórmula molecular garantizada.
   2. `[DEV2-3.2]` Integrar el encoder de DiffMS (`coleygroup/DiffMS`) acoplándolo con los fingerprints de MIST y restricciones estequiométricas.
   3. `[DEV2-3.3]` Desarrollar lógica de decisión que activa DiffMS si la fórmula tiene alta confianza, o MARLIN si el error de masa o patrón isotópico es ambiguo.
 
-### Dev 3: Lead de Decodificador de Difusión y Verificación Forward (Cycle-Consistency)
+### Dev 3 (Joan Riveros): Lead de Decodificador de Difusión y Verificación Forward (Cycle-Consistency)
 * **Módulos**: `src/models/generative/diffms_decoder.py`, `src/models/forward/cfmid_verifier.py`
 * **Tareas Asignadas**:
   1. `[DEV3-3.1]` Configurar e inferir el decodificador de difusión discreta sobre grafos moleculares de **DiffMS**, generando hasta 50 candidatos estructurales válidos por molécula fantasma.
@@ -34,16 +34,16 @@
 
 ```
 [Inicio Sprint]
-  Dev 1: Fusión multi-espectro (alimenta a Pilares A, B y C)
-  Dev 2: Pipeline de decisión fórmula vs. MARLIN
-  Dev 3: Decodificador DiffMS + Simulación CFM-ID
+  Octavio: Fusión multi-espectro (alimenta a Pilares A, B y C)
+  Leonardo: Pipeline de decisión fórmula vs. MARLIN
+  Joan: Decodificador DiffMS + Simulación CFM-ID
        |
-[Día 5] Dev 1 provee espectros fusionados a nivel molecule_id
+[Día 5] Octavio provee espectros fusionados a nivel molecule_id
        |
        v
-  Dev 2 & Dev 3 prueban generación de novo sobre espectros fusionados
+  Leonardo & Joan prueban generación de novo sobre espectros fusionados
        |
-[Día 8] Candidatos DiffMS generados pasan al verificador CFM-ID de Dev 3
+[Día 8] Candidatos DiffMS generados pasan al verificador CFM-ID de Joan
        |
        v
 [Día 10] Benchmark conjunto en Val-Clase3 con cycle-consistency scoring

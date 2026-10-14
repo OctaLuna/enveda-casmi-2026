@@ -37,9 +37,11 @@
    - Check `specs/` before creating or editing any production file in `src/`.
    - Complete tasks in `specs/.../tasks.md` sequentially.
    - Write unit tests in `tests/` before marking a task as done `[x]`.
-4. **Git & Team Boundaries (3 Devs)**:
-   - Dev 1: Data, splits, preprocessing, metrics, validation harness.
-   - Dev 2: Pilar A (Retrieval / DreaMS) & Pilar B (Fingerprints / MIST / Formula Matching).
-   - Dev 3: Pilar C (De Novo DiffMS / CFM-ID) & Final Re-ranker (LightGBM).
+4. **Git, Team Boundaries & Spanish Commits**:
+   - **Octavio Luna (Dev 1)**: Data, splits, preprocessing, metrics, validation harness.
+   - **Leonardo Ibarra (Dev 2)**: Pilar A (Retrieval / DreaMS) & Pilar B (Fingerprints / MIST / Formula Matching).
+   - **Joan Riveros (Dev 3)**: Pilar C (De Novo DiffMS / CFM-ID) & Final Re-ranker (LightGBM).
+   - Branch strategy: `main` (prod), `develop` (staging), `test` (benchmark), `dev/octavio`, `dev/leonardo`, `dev/joan`.
+   - **Commits en Español obligatorios**: Conventional Commits en español (ej. `feat(datos): ...`, `fix(metrica): ...`, `test(baseline): ...`).
    - Do not edit modules belonging to another developer without an interface contract change.
 

@@ -6,7 +6,7 @@
 
 ## 1. Reparto Equitativo de Tareas
 
-### Dev 1: Lead de Química Computacional y Universo de Candidatos
+### Dev 1 (Octavio Luna): Lead de Química Computacional y Universo de Candidatos
 * **Módulos**: `src/data/formula_estimator.py`, `src/data/candidate_db.py`, `src/data/chemical_filters.py`
 * **Tareas Asignadas**:
   1. `[DEV1-2.1]` Implementar estimador de fórmula molecular exacta en `src/data/formula_estimator.py` a partir de masa neutra (corregida por aducto) y ratios de picos isotópicos con ventana de 5-10 ppm.
@@ -14,7 +14,7 @@
   3. `[DEV1-2.3]` Construir indexador local offline de bases de candidatos (PubChem, COCONUT, LOTUS, HMDB) particionado por fórmula molecular exacta para consulta $O(1)$.
   4. `[DEV1-2.4]` Implementar suite de tests para fórmulas complejas de productos naturales (alcaloides, flavonoides, glicósidos).
 
-### Dev 2: Lead de Embeddings Fundacionales e Indexación Vectorial (Pilar A)
+### Dev 2 (Leonardo Ibarra): Lead de Embeddings Fundacionales e Indexación Vectorial (Pilar A)
 * **Módulos**: `src/models/retrieval/dreams_encoder.py`, `src/models/retrieval/faiss_index.py`
 * **Tareas Asignadas**:
   1. `[DEV2-2.1]` Integrar arquitectura y pesos preentrenados del modelo fundacional **DreaMS** en `src/models/retrieval/dreams_encoder.py`.
@@ -22,7 +22,7 @@
   3. `[DEV2-2.3]` Construir índice vectorial **FAISS IVF-PQ** (ej. `IVF4096,PQ64`) para indexar los ~2 millones de espectros de train con compresión de memoria para caber en RAM de Kaggle.
   4. `[DEV2-2.4]` Benchmark del Pilar A sobre `Val-Clase1`: optimizar top-k y umbral de confianza por distancia coseno.
 
-### Dev 3: Lead de Predicción de Fingerprints y Matching Estructural (Pilar B)
+### Dev 3 (Joan Riveros): Lead de Predicción de Fingerprints y Matching Estructural (Pilar B)
 * **Módulos**: `src/models/fingerprints/mist_predictor.py`, `src/models/fingerprints/tanimoto_ranker.py`, `src/models/fingerprints/sirius_bridge.py`
 * **Tareas Asignadas**:
   1. `[DEV3-2.1]` Integrar predictor neuronal de fingerprints **MIST** en `src/models/fingerprints/mist_predictor.py` para mapear espectro MS/MS a vector de subestructuras moleculares.
@@ -36,16 +36,16 @@
 
 ```
 [Inicio Sprint]
-  Dev 1: Desarrolla formula_estimator.py & candidate_db.py
-  Dev 2: Descarga DreaMS y configura FAISS IVF-PQ (Independiente)
-  Dev 3: Configura inferencia MIST y ranking Tanimoto
+  Octavio: Desarrolla formula_estimator.py & candidate_db.py
+  Leonardo: Descarga DreaMS y configura FAISS IVF-PQ (Independiente)
+  Joan: Configura inferencia MIST y ranking Tanimoto
        |
-[Día 5] Dev 1 entrega índice de candidatos por fórmula
+[Día 5] Octavio entrega índice de candidatos por fórmula
        |
        v
-  Dev 3 conecta MIST con candidatos de Dev 1 -> Pilar B funcional
+  Joan conecta MIST con candidatos de Octavio -> Pilar B funcional
        |
-[Día 9-10] Integración Pilar A (Dev 2) + Pilar B (Dev 3) evaluados en Val-Clase1 y Val-Clase2
+[Día 9-10] Integración Pilar A (Leonardo) + Pilar B (Joan) evaluados en Val-Clase1 y Val-Clase2
 ```
 
 ---

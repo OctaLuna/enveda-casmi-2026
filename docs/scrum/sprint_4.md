@@ -8,7 +8,7 @@
 
 ## 1. Reparto Equitativo de Tareas
 
-### Dev 1: Lead de Ingeniería de Features para Ensamble y Validación Cruzada
+### Dev 1 (Octavio Luna): Lead de Ingeniería de Features para Ensamble y Validación Cruzada
 * **Módulos**: `src/models/ensemble/feature_extractor.py`, `src/utils/cv_evaluator.py`
 * **Tareas Asignadas**:
   1. `[DEV1-4.1]` Implementar extractor de features tabular para cada par `(query_spectrum, candidate_smiles)`:
@@ -19,14 +19,14 @@
   2. `[DEV1-4.2]` Construir dataset de entrenamiento del re-ranker tabular a partir de predicciones *out-of-fold* (OOF) en las 3 clases.
   3. `[DEV1-4.3]` Diseñar arnés de evaluación con 3+ semillas aleatorias de split para evitar sobreajuste al Leaderboard público (~400 moléculas).
 
-### Dev 2: Lead de Entrenamiento del Re-Ranker y Empaquetado Offline
+### Dev 2 (Leonardo Ibarra): Lead de Entrenamiento del Re-Ranker y Empaquetado Offline
 * **Módulos**: `src/models/ensemble/lightgbm_ranker.py`, `src/utils/kaggle_packager.py`
 * **Tareas Asignadas**:
   1. `[DEV2-4.1]` Implementar y entrenar modelo **LightGBM / XGBoost** con función objetivo tipo `lambdarank` optimizada directamente para maximizar **MRR@25**.
   2. `[DEV2-4.2]` Desarrollar scripts de exportación e inmutabilidad de modelos serializados (`.json` / `.txt` livianos para inferencia ultrarrápida sin dependencias pesadas).
   3. `[DEV2-4.3]` Empaquetar todos los artefactos de pesos (DreaMS, MIST, DiffMS, FAISS index, LightGBM model) en Kaggle Datasets con control estricto de hashes de integridad.
 
-### Dev 3: Lead de Orquestación en Cascada, Presupuesto de Cómputo (<9h) y Submission
+### Dev 3 (Joan Riveros): Lead de Orquestación en Cascada, Presupuesto de Cómputo (<9h) y Submission
 * **Módulos**: `src/api/cascade_runner.py`, `src/api/submission.py`, `notebooks/kaggle_submission.ipynb`
 * **Tareas Asignadas**:
   1. `[DEV3-4.1]` Implementar el orquestador en cascada en `src/api/cascade_runner.py`:
@@ -43,12 +43,12 @@
 
 | Fecha | Hito Operativo | Responsable Principal |
 |---|---|---|
-| **26 Nov - 02 Dic** | Extracción de features y entrenamiento de LightGBM Re-Ranker | Dev 1 & Dev 2 |
-| **03 Dic - 06 Dic** | Implementación y calibración del presupuesto en cascada (<9h) | Dev 3 |
-| **07 Dic** | **Límite de Fusiones en Kaggle** — Congelamiento final del equipo | Todos |
-| **08 Dic - 11 Dic** | Validación offline integral en entorno idéntico a Kaggle Notebooks | Dev 1, Dev 2, Dev 3 |
-| **12 Dic - 13 Dic** | Generación de envíos finales de prueba y verificación de estabilidad de score | Dev 3 |
-| **14 Dic (11:59 PM UTC)** | **Selección de los 2 Notebooks finales en Kaggle** | Todos |
+| **26 Nov - 02 Dic** | Extracción de features y entrenamiento de LightGBM Re-Ranker | Octavio Luna & Leonardo Ibarra |
+| **03 Dic - 06 Dic** | Implementación y calibración del presupuesto en cascada (<9h) | Joan Riveros |
+| **07 Dic** | **Límite de Fusiones en Kaggle** — Congelamiento final del equipo | Octavio, Leonardo, Joan |
+| **08 Dic - 11 Dic** | Validación offline integral en entorno idéntico a Kaggle Notebooks | Octavio, Leonardo, Joan |
+| **12 Dic - 13 Dic** | Generación de envíos finales de prueba y verificación de estabilidad de score | Joan Riveros |
+| **14 Dic (11:59 PM UTC)** | **Selección de los 2 Notebooks finales en Kaggle** | Octavio, Leonardo, Joan |
 
 ---
 
