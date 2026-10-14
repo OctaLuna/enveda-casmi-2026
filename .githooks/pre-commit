@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Git Pre-Commit Hook for CASMI 2026
+# Enforces code formatting, linting, markdown integrity, and blocks heavy data files (>50MB).
+
+set -e
+
+echo "=== [CASMI Hook: pre-commit] Running quality & security checks ==="
+
+# 1. Check for heavy files, forbidden extensions and markdown integrity
+python .githooks/check_large_files.py
+if [ $? -ne 0 ]; then
+    echo "[FAIL] Large files or forbidden extensions detected."
+    exit 1
+fi
+
+# 2. Run Ruff / Flake8 linting
+if command -v ruff >/dev/null 2>&1; then
+    echo "--> Running Ruff linter..."
+    ruff check src/ tests/
+elif command -v flake8 >/dev/null 2>&1; then
+    echo "--> Running Flake8 linter..."
+    flake8 src/ tests/ --max-line-length=100
+else
+    echo "[WARN] Neither ruff nor flake8 found in PATH. Skipping linter."
+fi
+
+# 3. Run Black format verification
+if command -v black >/dev/null 2>&1; then
+    echo "--> Checking code formatting with Black..."
+    black --check src/ tests/
+else
+    echo "[WARN] Black not found in PATH. Skipping black check."
+fi
+
+echo "=== [CASMI Hook: pre-commit] All checks passed successfully! ==="
+exit 0

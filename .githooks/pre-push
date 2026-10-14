@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Git Pre-Push Hook for CASMI 2026
+# Enforces automated testing before pushing code to remote branches.
+
+set -e
+
+echo "=== [CASMI Hook: pre-push] Running Pytest Test Suite ==="
+
+if command -v pytest >/dev/null 2>&1; then
+    pytest tests/ -v
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -ne 0 ]; then
+        echo "[FAIL] Pytest tests failed with exit code $EXIT_CODE."
+        echo "Push aborted. Please fix broken tests before pushing."
+        exit $EXIT_CODE
+    fi
+else
+    # Fallback to python -m pytest or python -m unittest
+    python -m pytest tests/ -v 2>/dev/null || python -m unittest discover tests/
+fi
+
+echo "=== [CASMI Hook: pre-push] All tests passed! Proceeding with push. ==="
+exit 0

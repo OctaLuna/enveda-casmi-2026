@@ -1,0 +1,91 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & Editor settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Pytest / Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Data directories (Strictly forbidden in Git repository)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/splits/*
+!data/splits/.gitkeep
+data/external/*
+!data/external/.gitkeep
+
+# Model weights, embeddings, FAISS indices, large artifacts (>50MB)
+models/*
+!models/.gitkeep
+*.pt
+*.pth
+*.onnx
+*.bin
+*.pkl
+*.joblib
+*.index
+*.parquet
+*.h5
+*.feather
+
+# ML experiment tracking
+mlruns/
+wandb/
+lightning_logs/
+
+# Kaggle / Submission outputs
+submission.csv
+*.tar.gz
+*.zip
+kaggle_datasets/
+
+# Logs & scratch
+logs/
+*.log
+scratch/

@@ -1,0 +1,48 @@
+# Especificación SDD: 001_model_baseline
+## Ingesta, Filtrado de Espectros, Split Anti-Leakage de 3 Clases y Baseline Espectral
+
+> **ID de Especificación**: `SPEC-001`  
+> **Estado**: Aprobado para Ejecución  
+> **Área**: Pipeline Base & Baseline Heurístico
+
+---
+
+## 1. Propósito y Alcance
+Esta especificación define los requisitos funcionales y no funcionales para la ingestión inicial de `train.parquet` y `test.parquet`, la limpieza física y normalización espectral, la partición anti-leakage que simula las 3 clases del test oculto de Kaggle, la canonicalización estándar InChIKey14 con RDKit y el modelo baseline de recuperación espectral.
+
+---
+
+## 2. Requisitos Funcionales en Sintaxis EARS
+
+### 2.1 Requisitos Ubicuos (Ubiquitous Requirements)
+* **[REQ-UBI-01]**: El sistema debe normalizar las intensidades relativas de los picos de fragmentación de modo que el pico base sea exactamente 1.0.
+* **[REQ-UBI-02]**: El sistema debe representar y evaluar las estructuras químicas ground-truth y predichas utilizando el primer bloque de 14 caracteres del InChIKey (InChIKey14), canonicalizado mediante `rdMolStandardize.TautomerEnumerator`.
+* **[REQ-UBI-03]**: El sistema debe calcular el Mean Reciprocal Rank @ 25 (MRR@25) asignando $1/\text{rank}$ para coincidencias en posiciones 1 a 25, y 0.0 para posiciones $>25$ o no encontradas.
+* **[REQ-UBI-04]**: El sistema debe fijar la semilla determinista global (seed=42) en Python, NumPy y PyTorch al inicio de cada pipeline.
+
+### 2.2 Requisitos Basados en Eventos (Event-Driven Requirements)
+* **[REQ-EVT-01]**: CUANDO el pipeline reciba un espectro con fragmentos que superen $\text{precursor\_mz} + 2.0\text{ Da}$, el preprocesador debe descartar dichos fragmentos de la lista `ms2_mzs`.
+* **[REQ-EVT-02]**: CUANDO el pipeline procese un espectro de entrenamiento, el preprocesador debe descartar todos los picos con intensidad relativa inferior al 1% ($<0.01$) del pico base.
+* **[REQ-EVT-03]**: CUANDO el generador de splits cree las particiones locales, el sistema debe agrupar los datos por `molecule_id` asegurando que ninguna molécula pertenezca simultáneamente a train y a validation.
+* **[REQ-EVT-04]**: CUANDO el split de validación configure el subset `Val-Clase3`, el sistema debe aislar estructuras químicas con scaffolds de Murcko disjuntos y similitud Tanimoto ECFP4 $< 0.40$ respecto al train.
+* **[REQ-EVT-05]**: CUANDO el baseline reciba un espectro de query, el motor de inferencia debe recuperar hasta 25 candidatos únicos ordenados por similitud de precursor y fragmentos.
+
+### 2.3 Requisitos Basados en Estado (State-Driven Requirements)
+* **[REQ-STA-01]**: MIENTRAS el sistema opere en modo de evaluación offline de Kaggle, el pipeline debe resolver las consultas utilizando únicamente artefactos de datos locales sin realizar conexiones de red.
+* **[REQ-STA-02]**: MIENTRAS se procesen múltiples adquisiciones espectrales (`spectrum_id`) correspondientes a un mismo `molecule_id`, el sistema debe mantener trazabilidad íntegra del identificador de molécula.
+
+### 2.4 Requisitos de Comportamiento No Deseado (Unwanted Behavior Requirements)
+* **[REQ-ERR-01]**: SI un espectro contiene menos de 5 picos válidos tras la limpieza, ENTONCES el sistema debe emitir una advertencia estructurada y descartar el espectro del split de entrenamiento.
+* **[REQ-ERR-02]**: SI un valor de SMILES en el conjunto de entrenamiento no puede ser parseado por RDKit, ENTONCES el sistema debe registrar el error en el log de auditoría y excluir la muestra de la indexación.
+* **[REQ-ERR-03]**: SI una lista de predicciones generada para un `molecule_id` contiene más de 25 SMILES, ENTONCES el formateador de submisión debe truncar estrictamente la lista a los primeros 25 elementos.
+
+### 2.5 Requisitos Opcionales (Optional Features)
+* **[REQ-OPT-01]**: DONDE se disponga del tipo de aducto (`adduct`), el sistema debe calcular y registrar la masa neutra exacta del analito antes de estimar su fórmula elemental.
+* **[REQ-OPT-02]**: DONDE se aplique transformación de intensidades, el sistema debe permitir configuración entre raíz cuadrada (`sqrt`) o escala logarítmica (`log1p`).
+
+---
+
+## 3. Criterios de Aceptación (DoD)
+- Todas las funciones implementadas cuentan con tests unitarios con aserciones estrictas.
+- La ejecución de `pytest tests/ -v` finaliza con código de salida 0.
+- El archivo `submission.csv` generado cumple al 100% las especificaciones de Kaggle.
