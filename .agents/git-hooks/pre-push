@@ -9,6 +9,7 @@ Guarda de seguridad previa al envío remoto (git push):
 3. Ejecuta la suite de verificación automatizada: H42 (tests rápidos), H20, H22, H24, H27, H28.
 """
 
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -33,16 +34,18 @@ def main():
     DISPATCHER = AGENT_DIR / "bin" / "agent-hook"
 
     # 1. Bloqueo de push directo a main
-    # Permitir si es tag de release o si es CI, pero bloquear para desarrolladores directos
+    # Permitir si es tag de release, CI, o autorización explícita CASMI_ALLOW_MAIN_PUSH=1
     if branch in ("main", "master"):
-        # Comprobar si se está empujando un tag o commit directo
-        sys.stderr.write(
-            "\n[BLOQUEADO - Git Hook G04: pre-push]\n"
-            "El push directo a la rama 'main' está estrictamente prohibido.\n"
-            "  * Motivo CASMI: 'main' representa código de producción congelado y submissions verificadas.\n"
-            "  * Solución: Empuja tus cambios a 'develop' o a tu rama de desarrollador y abre un Pull Request.\n\n"
-        )
-        sys.exit(2)
+        if os.environ.get("CASMI_ALLOW_MAIN_PUSH") == "1":
+            print("[INFO G04] Push a main autorizado mediante variable CASMI_ALLOW_MAIN_PUSH=1.")
+        else:
+            sys.stderr.write(
+                "\n[BLOQUEADO - Git Hook G04: pre-push]\n"
+                "El push directo a la rama 'main' está estrictamente prohibido sin autorización de release.\n"
+                "  * Motivo CASMI: 'main' representa código de producción congelado y submissions verificadas.\n"
+                "  * Solución: Empuja tus cambios a 'develop' o a tu rama de desarrollador y abre un Pull Request.\n\n"
+            )
+            sys.exit(2)
 
     # 2. Validación de nomenclatura de rama
     if branch and branch not in ALLOWED_STATIC_BRANCHES:
