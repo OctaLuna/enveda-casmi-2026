@@ -36,10 +36,11 @@ Para garantizar velocidad y cero conflictos en Git (*merge conflicts*), cada des
    - `main`: Producción oficial y submissions finales verificadas (protegida).
    - `develop`: Integración continua de features completadas (protegida).
    - `test`: Banco de pruebas de estrés offline y benchmarks de 9 horas.
+   - `product`: Congelamiento y validación para el artefacto final de Kaggle.
 2. **Ramas de Desarrollador**:
-   - `dev/octavio` (Octavio Luna)
-   - `dev/leonardo` (Leonardo Ibarra)
-   - `dev/joan` (Joan Riveros)
+   - `octavio` (Octavio Luna)
+   - `leonardo` (Leonardo Ibarra)
+   - `joan` (Joan Riveros)
 3. **Nomenclatura de Feature Branches**:
    - `feature/sprint<N>-octavio-<feature>`
    - `feature/sprint<N>-leonardo-<feature>`

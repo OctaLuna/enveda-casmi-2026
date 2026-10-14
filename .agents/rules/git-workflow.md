@@ -15,8 +15,8 @@
 
 3. **Estrategia de Ramas**:
    - Ramas protegidas: `main` (producción) y `develop` (integración).
-   - Rama de pruebas: `test`.
-   - Ramas de trabajo de desarrollador: `dev/octavio`, `dev/leonardo`, `dev/joan`.
+   - Rama de pruebas y staging: `test`, `product`.
+   - Ramas de trabajo de desarrollador: `octavio`, `leonardo`, `joan`.
    - Ramas de características: `feature/sprint<N>-<dev>-<nombre>`.
 
 4. **Contratos e Interfaces**:

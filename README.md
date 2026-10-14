@@ -75,11 +75,11 @@ El repositorio sigue un modelo adaptado a Machine Learning colaborativo para 3 d
 [ test ]     |         |          (Pruebas de estrés offline < 9h y benchmarks)
    ^         |         |
    |         |         |
-[ dev/octavio ]        |          (Espacio de trabajo de Octavio Luna - Datos & Validación)
+[ octavio ]            |          (Espacio de trabajo de Octavio Luna - Datos & Validación)
    |         |         |
-   |   [ dev/leonardo ]|          (Espacio de trabajo de Leonardo Ibarra - Retrieval & MIST)
+   |   [ leonardo ]    |          (Espacio de trabajo de Leonardo Ibarra - Retrieval & MIST)
    |         |         |
-   |         |   [ dev/joan ]     (Espacio de trabajo de Joan Riveros - Generativo & Ensamble)
+   |         |   [ joan ]         (Espacio de trabajo de Joan Riveros - Generativo & Ensamble)
    |         |         |
    v         v         v
 feature/sprint<N>-<dev>-<nombre>  (Ramas atómicas de trabajo por tarea SDD)

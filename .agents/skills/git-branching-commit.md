@@ -20,7 +20,7 @@ El proyecto utiliza un modelo de integración continua adaptado a Machine Learni
    |
 +--+------------------------+----------------------+
 |                           |                      |
-[ dev/octavio ]       [ dev/leonardo ]       [ dev/joan ]
+[ octavio ]           [ leonardo ]           [ joan ]
 (Octavio Luna)        (Leonardo Ibarra)      (Joan Riveros)
        |                     |                      |
        v                     v                      v
@@ -33,10 +33,11 @@ feature/sprint1-octavio-splitter   feature/sprint2-leonardo-faiss   feature/spri
 | **`main`** | Código de producción final, estable y empaquetado para Kaggle. | **Estrictamente protegida**. Solo merges desde `develop` vía PR validado. |
 | **`develop`** | Integración continua donde convergen las features completadas del Sprint. | **Estrictamente protegida**. Requiere tests verdes y aprobación cruzada. |
 | **`test`** | Banco de pruebas de estrés y simulación offline para medir tiempos ($\le 9\text{h}$) y VRAM/RAM. | Integración y benchmark previo a release. |
-| **`dev/octavio`** | Espacio de trabajo e integración de **Octavio Luna** (Datos y Validación). | Libre para Dev 1 y su agente de IA. |
-| **`dev/leonardo`** | Espacio de trabajo e integración de **Leonardo Ibarra** (Retrieval y MIST). | Libre para Dev 2 y su agente de IA. |
-| **`dev/joan`** | Espacio de trabajo e integración de **Joan Riveros** (De Novo y Ensamble). | Libre para Dev 3 y su agente de IA. |
-| **`feature/*`** | Ramas efímeras creadas a partir de `develop` o `dev/<nombre>` para una tarea atómica SDD. | Se eliminan tras el merge exitoso. |
+| **`product`** | Entorno de congelamiento y preparación del artefacto Kaggle final. | Staging de entrega. |
+| **`octavio`** | Espacio de trabajo e integración de **Octavio Luna** (Datos y Validación). | Libre para Dev 1 y su agente de IA. |
+| **`leonardo`** | Espacio de trabajo e integración de **Leonardo Ibarra** (Retrieval y MIST). | Libre para Dev 2 y su agente de IA. |
+| **`joan`** | Espacio de trabajo e integración de **Joan Riveros** (De Novo y Ensamble). | Libre para Dev 3 y su agente de IA. |
+| **`feature/*`** | Ramas efímeras creadas a partir de `develop` o `<dev>` para una tarea atómica SDD. | Se eliminan tras el merge exitoso. |
 
 ---
 
@@ -89,7 +90,7 @@ feature/sprint1-octavio-splitter   feature/sprint2-leonardo-faiss   feature/spri
    git checkout -b feature/sprint1-octavio-deisotopado
 
    # O trabajar en la rama personal del desarrollador:
-   git checkout dev/octavio
+   git checkout octavio
    git merge develop
    ```
 
