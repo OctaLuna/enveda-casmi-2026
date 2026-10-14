@@ -1,0 +1,38 @@
+{
+  "project": "enveda-casmi-2026",
+  "rdkit_version": "2026.03.3",
+  "max_candidates": 25,
+  "candidate_separator": ";",
+  "time_limit_hours": 9,
+  "time_margin": 0.20,
+  "min_peaks": 5,
+  "intensity_threshold_range": [0.01, 0.02],
+  "precursor_tolerance_da": 2.0,
+  "min_seeds": 3,
+  "large_file_mb": 25,
+  "dates": {
+    "team_deadline": "2026-12-07",
+    "final_deadline_utc": "2026-12-14T23:59:00Z"
+  },
+  "protected_paths": [
+    "data/raw/",
+    "data/external/"
+  ],
+  "offline_paths": [
+    "inference/",
+    "notebooks/final/",
+    "src/inference/"
+  ],
+  "scopes": [
+    "pilar-a",
+    "pilar-b",
+    "pilar-c",
+    "ensemble",
+    "val",
+    "prep",
+    "infra",
+    "docs",
+    "kaggle",
+    "agent"
+  ]
+}

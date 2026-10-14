@@ -1,0 +1,226 @@
+#!/usr/bin/env python3
+"""
+agent-hook - Despachador universal de hooks multi-agente para Enveda CASMI 2026.
+Diseñado para Claude Code, Codex, Antigravity y Git.
+"""
+
+import argparse
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+# Asegurar importación de lib/common.py
+BIN_DIR = Path(__file__).resolve().parent
+AGENT_DIR = BIN_DIR.parent
+HOOKS_DIR = AGENT_DIR / "hooks"
+LIB_DIR = HOOKS_DIR / "lib"
+if str(LIB_DIR) not in sys.path:
+    sys.path.insert(0, str(LIB_DIR))
+
+try:
+    import common
+except ImportError:
+    common = None
+
+
+def normalize_event_name(raw_event: str) -> str:
+    """Normaliza nombres de eventos camelCase o con guiones a snake_case."""
+    ev = raw_event.strip().lower()
+    mapping = {
+        "pretooluse": "pre_tool",
+        "posttooluse": "post_tool",
+        "sessionstart": "session_start",
+        "userpromptsubmit": "prompt",
+        "precompact": "pre_compact",
+        "subagentstop": "stop",
+        "precommit": "git_pre_commit",
+        "prepush": "git_pre_push",
+        "commitmsg": "git_commit_msg",
+    }
+    return mapping.get(ev.replace("-", "").replace("_", ""), ev.replace("-", "_"))
+
+
+def normalize_tool_name(raw_tool: str) -> str:
+    """Normaliza nombres de herramientas de distintos agentes."""
+    t = raw_tool.strip().lower()
+    if t in ("write", "edit", "multiedit", "str_replace_editor", "write_to_file", "replace_file_content"):
+        return "write" if "write" in t else "edit"
+    if t in ("bash", "run_command", "execute_command", "terminal", "sh"):
+        return "bash"
+    return t
+
+
+def build_payload(args: argparse.Namespace) -> dict:
+    """Construye el payload unificado a partir de stdin y argumentos de CLI."""
+    payload = {
+        "agent": args.agent or "unknown",
+        "event": normalize_event_name(args.event),
+        "tool": normalize_tool_name(args.tool or ""),
+        "paths": [args.path] if args.path else [],
+        "command": args.command or "",
+        "content": args.content or "",
+        "prompt": args.prompt or "",
+        "cwd": os.getcwd(),
+        "raw": {}
+    }
+
+    # Si hay entrada en stdin, fusionar
+    if not sys.stdin.isatty():
+        try:
+            stdin_data = sys.stdin.read().strip()
+            if stdin_data:
+                parsed = json.loads(stdin_data)
+                if isinstance(parsed, dict):
+                    payload["raw"] = parsed
+                    # Si el payload ya venía normalizado
+                    for k in ("agent", "event", "tool", "paths", "command", "content", "prompt", "cwd"):
+                        if k in parsed and parsed[k]:
+                            if k == "event":
+                                payload[k] = normalize_event_name(str(parsed[k]))
+                            elif k == "tool":
+                                payload[k] = normalize_tool_name(str(parsed[k]))
+                            elif k == "paths" and isinstance(parsed[k], list):
+                                payload[k] = list(set(payload["paths"] + parsed[k]))
+                            else:
+                                payload[k] = parsed[k]
+                    # Adapters específicos
+                    # Claude Code PreToolUse / PostToolUse
+                    if "tool_name" in parsed:
+                        payload["tool"] = normalize_tool_name(parsed["tool_name"])
+                    if "tool_input" in parsed and isinstance(parsed["tool_input"], dict):
+                        inp = parsed["tool_input"]
+                        if "command" in inp:
+                            payload["command"] = inp["command"]
+                        if "path" in inp:
+                            payload["paths"].append(inp["path"])
+                        if "file_path" in inp:
+                            payload["paths"].append(inp["file_path"])
+                        if "target_file" in inp or "TargetFile" in inp:
+                            payload["paths"].append(inp.get("target_file") or inp.get("TargetFile"))
+                        if "content" in inp or "CodeContent" in inp:
+                            payload["content"] = inp.get("content") or inp.get("CodeContent")
+        except Exception as e:
+            if common:
+                common.log_error("agent-hook.stdin", f"Error parseando stdin: {e}")
+
+    # Limpiar rutas nulas o vacías
+    payload["paths"] = [str(p) for p in payload["paths"] if p]
+    return payload
+
+
+def main():
+    parser = argparse.ArgumentParser(description="CASMI Agent Hook Dispatcher")
+    parser.add_argument("event", nargs="?", default="generic", help="Nombre del evento a disparar")
+    parser.add_argument("--agent", default="unknown", help="Nombre del agente (claude, codex, antigravity, git)")
+    parser.add_argument("--tool", default="", help="Nombre de la herramienta")
+    parser.add_argument("--path", default="", help="Ruta de archivo objetivo")
+    parser.add_argument("--command", default="", help="Comando bash ejecutado")
+    parser.add_argument("--prompt", default="", help="Prompt del usuario")
+    parser.add_argument("--content", default="", help="Contenido del archivo o buffer")
+
+    args, unknown = parser.parse_known_args()
+
+    # Detección de proyecto
+    if common:
+        root = common.find_project_root()
+        if not root:
+            # No estamos en el proyecto CASMI -> salida limpia
+            sys.exit(0)
+    else:
+        root = Path.cwd()
+
+    payload = build_payload(args)
+    payload_bytes = json.dumps(payload).encode("utf-8")
+
+    # Cargar registro
+    registry_path = HOOKS_DIR / "registry.json"
+    if not registry_path.is_file():
+        sys.exit(0)
+
+    try:
+        with open(registry_path, "r", encoding="utf-8") as f:
+            registry_data = json.load(f)
+    except Exception as e:
+        if common:
+            common.log_error("agent-hook.registry", f"Error leyendo registry.json: {e}")
+        sys.exit(0)
+
+    hooks = registry_data.get("hooks", [])
+    current_event = payload["event"]
+    current_tool = payload["tool"]
+    current_paths = payload["paths"]
+
+    for hook in hooks:
+        hook_events = [normalize_event_name(ev) for ev in hook.get("events", [])]
+        if current_event not in hook_events and "*" not in hook_events:
+            continue
+
+        # Filtro por herramientas si están declaradas
+        required_tools = [normalize_tool_name(t) for t in hook.get("tools", [])]
+        if required_tools and current_tool not in required_tools:
+            continue
+
+        # Filtro por rutas si están declaradas
+        path_patterns = hook.get("path_patterns", [])
+        if path_patterns and current_paths:
+            matched_any = False
+            for p in current_paths:
+                if common and common.match_any_glob(p, path_patterns):
+                    matched_any = True
+                    break
+            if not matched_any:
+                continue
+
+        # Ejecutar hook
+        script_rel = hook.get("script", "")
+        script_path = HOOKS_DIR / script_rel
+        if not script_path.is_file():
+            continue
+
+        timeout = hook.get("timeout", 10)
+        mode = hook.get("mode", "warn")
+
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(script_path)],
+                input=payload_bytes,
+                capture_output=True,
+                timeout=timeout
+            )
+
+            # Imprimir salidas
+            if proc.stdout:
+                sys.stdout.buffer.write(proc.stdout)
+                sys.stdout.flush()
+
+            if proc.stderr:
+                sys.stderr.buffer.write(proc.stderr)
+                sys.stderr.flush()
+
+            # Verificación de salida
+            if proc.returncode == 2:
+                if mode == "block":
+                    sys.exit(2)
+                else:
+                    if common:
+                        common.warn(f"Violación detectada en hook {hook.get('id')} pero el modo es 'warn'.")
+
+            elif proc.returncode != 0:
+                # Error de infraestructura: no bloquear, registrar
+                if common:
+                    common.log_error(hook.get("id", "unknown"), f"Hook falló con código {proc.returncode}: {proc.stderr.decode('utf-8', errors='ignore')}")
+
+        except subprocess.TimeoutExpired:
+            if common:
+                common.log_error(hook.get("id", "unknown"), f"Timeout excedido ({timeout}s)")
+        except Exception as e:
+            if common:
+                common.log_error(hook.get("id", "unknown"), f"Excepción ejecutando hook: {e}")
+
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

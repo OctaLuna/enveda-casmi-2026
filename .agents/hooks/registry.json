@@ -1,0 +1,264 @@
+{
+  "hooks": [
+    {
+      "id": "H01",
+      "name": "session-start-context",
+      "script": "context/session_start_context.py",
+      "events": ["session_start"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 5
+    },
+    {
+      "id": "H02",
+      "name": "prompt-context-injector",
+      "script": "context/prompt_context_injector.py",
+      "events": ["prompt", "user_prompt_submit"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 2
+    },
+    {
+      "id": "H03",
+      "name": "pre-compact-save",
+      "script": "context/pre_compact_save.py",
+      "events": ["pre_compact"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 5
+    },
+    {
+      "id": "H10",
+      "name": "block-secrets",
+      "script": "safety/block_secrets.py",
+      "events": ["pre_tool", "git_pre_commit"],
+      "tools": ["write", "edit", "multiedit", "bash"],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 2
+    },
+    {
+      "id": "H11",
+      "name": "protect-raw-data",
+      "script": "safety/protect_raw_data.py",
+      "events": ["pre_tool"],
+      "tools": ["write", "edit", "multiedit", "bash"],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 2
+    },
+    {
+      "id": "H12",
+      "name": "block-large-files",
+      "script": "safety/block_large_files.py",
+      "events": ["pre_tool", "git_pre_commit"],
+      "tools": ["bash"],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H13",
+      "name": "dangerous-commands",
+      "script": "safety/dangerous_commands.py",
+      "events": ["pre_tool"],
+      "tools": ["bash"],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 2
+    },
+    {
+      "id": "H14",
+      "name": "offline-guard",
+      "script": "safety/offline_guard.py",
+      "events": ["pre_tool", "git_pre_commit"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["inference/*", "notebooks/final/*", "src/inference/*", "src/api/*"],
+      "mode": "block",
+      "timeout": 2
+    },
+    {
+      "id": "H20",
+      "name": "rdkit-pin-check",
+      "script": "domain/rdkit_pin_check.py",
+      "events": ["session_start", "git_pre_commit", "git_pre_push", "pre_submit"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H21",
+      "name": "canonicalization-golden-test",
+      "script": "domain/canonicalization_golden_test.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["*tautomer*", "*inchikey*", "*canonical*", "src/utils/metrics.py"],
+      "mode": "block",
+      "timeout": 10
+    },
+    {
+      "id": "H22",
+      "name": "split-leakage-guard",
+      "script": "domain/split_leakage_guard.py",
+      "events": ["post_tool", "git_pre_push"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["src/validation/split*", "src/data/split*", "data/splits/*", "splits/*"],
+      "mode": "block",
+      "timeout": 15
+    },
+    {
+      "id": "H23",
+      "name": "metric-test",
+      "script": "domain/metric_test.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["src/**/metric*", "src/utils/metrics.py"],
+      "mode": "block",
+      "timeout": 10
+    },
+    {
+      "id": "H24",
+      "name": "submission-validator",
+      "script": "domain/submission_validator.py",
+      "events": ["post_tool", "git_pre_push", "stop", "pre_submit"],
+      "tools": ["write", "edit", "multiedit", "bash"],
+      "path_patterns": ["*submission.csv*", "reports/*submission*"],
+      "mode": "block",
+      "timeout": 10
+    },
+    {
+      "id": "H25",
+      "name": "adduct-mass-guard",
+      "script": "domain/adduct_mass_guard.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["src/prep*/**", "src/data/adduct*"],
+      "mode": "block",
+      "timeout": 10
+    },
+    {
+      "id": "H26",
+      "name": "preprocessing-order-check",
+      "script": "domain/preprocessing_order_check.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["src/prep*/**", "src/data/**"],
+      "mode": "warn",
+      "timeout": 10
+    },
+    {
+      "id": "H27",
+      "name": "time-budget-guard",
+      "script": "domain/time_budget_guard.py",
+      "events": ["post_tool", "git_pre_push", "pre_submit"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["configs/budget.yaml", "*budget*.yaml"],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H28",
+      "name": "packaging-manifest-check",
+      "script": "domain/packaging_manifest_check.py",
+      "events": ["git_pre_push", "pre_submit"],
+      "tools": [],
+      "path_patterns": ["kaggle/manifest.yaml", "src/inference/*"],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H29",
+      "name": "license-ledger",
+      "script": "domain/license_ledger.py",
+      "events": ["pre_tool", "git_pre_commit"],
+      "tools": ["write", "edit", "multiedit", "bash"],
+      "path_patterns": ["data/external/*", "models/external/*"],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H30",
+      "name": "seed-determinism",
+      "script": "domain/seed_determinism.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["src/models/**", "src/data/split*"],
+      "mode": "warn",
+      "timeout": 5
+    },
+    {
+      "id": "H40",
+      "name": "format-lint",
+      "script": "quality/format_lint.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["*.py"],
+      "mode": "warn",
+      "timeout": 10
+    },
+    {
+      "id": "H41",
+      "name": "notebook-hygiene",
+      "script": "quality/notebook_hygiene.py",
+      "events": ["git_pre_commit"],
+      "tools": [],
+      "path_patterns": ["*.ipynb"],
+      "mode": "block",
+      "timeout": 5
+    },
+    {
+      "id": "H42",
+      "name": "fast-tests",
+      "script": "quality/fast_tests.py",
+      "events": ["git_pre_push", "pre_submit"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "block",
+      "timeout": 30
+    },
+    {
+      "id": "H43",
+      "name": "dependency-lock-check",
+      "script": "quality/dependency_lock_check.py",
+      "events": ["post_tool"],
+      "tools": ["write", "edit", "multiedit"],
+      "path_patterns": ["requirements*.txt", "pyproject.toml", "environment.yml"],
+      "mode": "warn",
+      "timeout": 5
+    },
+    {
+      "id": "H50",
+      "name": "experiment-logger",
+      "script": "logging/experiment_logger.py",
+      "events": ["stop", "subagent_stop"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 10
+    },
+    {
+      "id": "H51",
+      "name": "submission-ledger",
+      "script": "logging/submission_ledger.py",
+      "events": ["post_tool"],
+      "tools": ["bash"],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 5
+    },
+    {
+      "id": "H52",
+      "name": "checklist-sync",
+      "script": "logging/checklist_sync.py",
+      "events": ["stop"],
+      "tools": [],
+      "path_patterns": [],
+      "mode": "warn",
+      "timeout": 5
+    }
+  ]
+}

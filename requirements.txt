@@ -8,7 +8,7 @@ pydantic>=2.6.0
 
 # Chemoinformatics & Mass Spectrometry
 # Note: Masterplan specifies RDKit 2026.03.3 as official evaluation benchmark
-rdkit>=2024.3.1
+rdkit==2026.03.3
 molvs>=0.1.1
 matchms>=0.24.0
 

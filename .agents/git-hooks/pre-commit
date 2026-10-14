@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# G01 - Git Hook pre-commit
+# Ejecuta verificaciones rápidas antes de autorizar el commit:
+# H10 (block secrets), H12 (block large files), H20 (rdkit pin), H29 (license ledger), H41 (notebook hygiene), H40 (linting)
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AGENT_DIR="$(dirname "$SCRIPT_DIR")"
+DISPATCHER="$AGENT_DIR/bin/agent-hook"
+
+if python --version >/dev/null 2>&1; then
+    PY="python"
+elif python3 --version >/dev/null 2>&1; then
+    PY="python3"
+else
+    PY="py"
+fi
+
+"$PY" "$DISPATCHER" git_pre_commit --agent git
+exit $?
