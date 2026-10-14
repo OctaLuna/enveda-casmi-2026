@@ -15,7 +15,7 @@ import re
 import subprocess
 import sys
 
-ALLOWED_STATIC_BRANCHES = {"develop", "test", "product", "octavio", "leonardo", "joan"}
+ALLOWED_STATIC_BRANCHES = {"main", "develop", "test", "product", "octavio", "leonardo", "joan"}
 FEATURE_BRANCH_REGEX = r"^(feat|fix|exp|chore|docs)/[a-z0-9_\-]+$"
 
 
