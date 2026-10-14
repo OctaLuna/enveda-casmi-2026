@@ -1,0 +1,3 @@
+molecule_id,smiles
+MOL_001,CCO;CCN;CCCC
+MOL_002,c1ccccc1;c1ccncc1
