@@ -126,3 +126,4 @@ def test_preprocessor_calculates_neutral_mass(preprocessor):
     neutral_mass = preprocessor.get_neutral_mass(record)
     assert neutral_mass is not None
     assert pytest.approx(neutral_mass, abs=1e-4) == 194.080376
+
