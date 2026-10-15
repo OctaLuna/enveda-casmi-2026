@@ -40,8 +40,8 @@ def test_calculate_mrr_at_25_rank_2_and_rank_4():
 
 def test_calculate_mrr_at_25_outside_top_25():
     ground_truth = ["CCO"]
-    # 25 wrong molecules, then CCO at position 26
-    wrong_candidates = [f"C{i}" for i in range(25)]
+    # 25 distinct valid alkane molecules, then CCO at position 26
+    wrong_candidates = ["C" * (i + 1) for i in range(25)]
     predictions = [wrong_candidates + ["CCO"]]
     score = calculate_mrr_at_25(ground_truth, predictions)
     assert score == 0.0
@@ -49,3 +49,18 @@ def test_calculate_mrr_at_25_outside_top_25():
 
 def test_calculate_mrr_at_25_empty():
     assert calculate_mrr_at_25([], []) == 0.0
+
+
+def test_dedupe_candidates_by_inchikey14():
+    from src.utils.metrics import dedupe_candidates_by_inchikey14
+
+    # Identical SMILES and keto-enol tautomers of acetone: CC(C)=O and CC(O)=C
+    candidates = ["CCO", "CCO", "CC(C)=O", "CC(O)=C", "c1ccccc1"]
+    deduped = dedupe_candidates_by_inchikey14(candidates, max_k=25)
+
+    assert "CCO" in deduped
+    assert deduped.count("CCO") == 1
+    assert "CC(C)=O" in deduped
+    # Tautomer CC(O)=C must be deduplicated because it has the exact same InChIKey14
+    assert "CC(O)=C" not in deduped
+    assert "c1ccccc1" in deduped
