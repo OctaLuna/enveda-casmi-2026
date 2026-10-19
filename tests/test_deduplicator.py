@@ -104,4 +104,3 @@ def test_deduplicate_spectra_removes_identical_spectra():
     assert len(mol_dup_spec_ids) == 2
     assert "spec_diff_adduct" in mol_dup_spec_ids
     assert ("spec_dup_1" in mol_dup_spec_ids) ^ ("spec_dup_2" in mol_dup_spec_ids)
-

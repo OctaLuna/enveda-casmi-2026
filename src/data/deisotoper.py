@@ -84,4 +84,3 @@ def deisotope_spectrum(
 
     kept_indices = np.where(~collapsed)[0]
     return mzs[kept_indices].tolist(), accumulated_ints[kept_indices].tolist()
-

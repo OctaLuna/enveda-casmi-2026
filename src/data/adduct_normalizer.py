@@ -90,4 +90,3 @@ def calculate_neutral_mass(precursor_mz: float, adduct: str) -> float | None:
         return None
 
     return (precursor_mz * z - delta) / n
-
