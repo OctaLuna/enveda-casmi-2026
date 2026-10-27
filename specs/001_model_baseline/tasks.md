@@ -72,5 +72,5 @@
 - [x] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
   *Estimación*: 30 min | *Dependencias*: T1.3, T3.3, T4.1, T4.5 | *DoD*: Reporte generado en consola y exportado a markdown con los 3 scores.
 
-- [ ] `[DEV3-T4.4]` [RF: REQ-ERR-03, REQ-STA-01] Implementar pipeline completo de generación de `submission.csv` para `test.parquet` usando el baseline y validar formato final.  
+- [x] `[DEV3-T4.4]` [RF: REQ-ERR-03, REQ-STA-01] Implementar pipeline completo de generación de `submission.csv` para `test.parquet` usando el baseline y validar formato final.  
   *Estimación*: 25 min | *Dependencias*: T1.4, T4.1, T4.5 | *DoD*: Archivo `submission.csv` generado y validado con `validate_submission_csv()`.
