@@ -69,7 +69,7 @@
 - [x] `[DEV3-T4.5]` (Sprint 1: `DEV3-1.2`) [RF: REQ-EVT-05, REQ-ERR-03, REQ-STA-02, REQ-UBI-04] Implementar orquestador baseline de extremo a extremo `BaselinePipeline` en `src/api/baseline_pipeline.py`: preprocesa (`SpectrumPreprocessor`), indexa train (`BaselineSpectralMatcher.fit`), agrupa los espectros de query por `molecule_id`, fusiona los rankings por espectro (suma de puntaje reciproco de rango, desempate determinista), trunca a 25 y devuelve `dict[molecule_id, list[smiles]]` listo para `write_submission_csv`. Fija `set_seed(42)`; todo `molecule_id` de query aparece en la salida (lista vacia si no hay candidatos).  
   *Estimacion*: 30 min | *Dependencias*: T1.4, T2.x (preprocesador), T4.1 | *DoD*: `tests/test_baseline_pipeline.py` passing con datos sinteticos (fusion multi-espectro, truncado a 25, cobertura de todos los `molecule_id`, determinismo, y round-trip con `validate_submission_csv`).
 
-- [ ] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
+- [x] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
   *Estimación*: 30 min | *Dependencias*: T1.3, T3.3, T4.1, T4.5 | *DoD*: Reporte generado en consola y exportado a markdown con los 3 scores.
 
 - [ ] `[DEV3-T4.4]` [RF: REQ-ERR-03, REQ-STA-01] Implementar pipeline completo de generación de `submission.csv` para `test.parquet` usando el baseline y validar formato final.  
