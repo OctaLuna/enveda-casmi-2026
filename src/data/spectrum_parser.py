@@ -3,6 +3,15 @@
 from dataclasses import dataclass
 
 
+@dataclass(frozen=True)
+class SpectrumMetadata:
+    """Lightweight identifiers and label used by split generation."""
+
+    molecule_id: str
+    spectrum_id: str
+    label: str
+
+
 @dataclass
 class SpectrumRecord:
     """Represents a single LC-MS/MS spectrum record from train.parquet or test.parquet."""

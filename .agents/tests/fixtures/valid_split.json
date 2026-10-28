@@ -1,11 +1,36 @@
 {
-  "seeds": [42, 1337, 2026],
-  "subsets": {
-    "val_clase1": ["MOL_001"],
-    "val_clase2": ["MOL_002"],
-    "val_clase3": ["MOL_003"]
-  },
-  "train_molecule_ids": ["MOL_100", "MOL_101", "MOL_102"],
-  "val_molecule_ids": ["MOL_001", "MOL_002", "MOL_003"]
+  "schema_version": 1,
+  "train_molecule_ids": [
+    "MOL_001",
+    "MOL_100",
+    "MOL_101"
+  ],
+  "val_clase1_molecule_ids": [
+    "MOL_001"
+  ],
+  "val_clase1_query_spectrum_ids": [
+    "SPEC_QUERY_1"
+  ],
+  "val_clase2_molecule_ids": [
+    "MOL_002"
+  ],
+  "val_clase3_molecule_ids": [
+    "MOL_003"
+  ],
+  "val_clase3_excluded_neighbor_molecule_ids": [
+    "MOL_004"
+  ],
+  "metadata": {
+    "seed": 42,
+    "n_total_molecules": 7,
+    "n_total_spectra": 10,
+    "n_train_molecules": 3,
+    "n_train_spectra": 4,
+    "n_val_clase1_molecules": 1,
+    "n_val_clase2_molecules": 1,
+    "n_val_clase3_molecules": 1,
+    "n_excluded_neighbor_molecules": 1,
+    "mean_val_clase3_nearest_train_tanimoto_distance": 0.75,
+    "train_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
 }
-

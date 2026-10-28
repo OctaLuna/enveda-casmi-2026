@@ -57,6 +57,9 @@ data/processed/*
 !data/processed/.gitkeep
 data/splits/*
 !data/splits/.gitkeep
+!data/splits/split_seed_42.json
+!data/splits/split_seed_1337.json
+!data/splits/split_seed_2026.json
 data/external/*
 !data/external/.gitkeep
 

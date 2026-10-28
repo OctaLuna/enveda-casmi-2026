@@ -61,6 +61,15 @@ El test oculto de Kaggle contiene ~400 moléculas distribuidas en 3 clases. Para
 
 ---
 
+## 3.1. Generación reproducible de manifiestos
+
+- El train oficial usa `inchikey14` y `normalized_smiles`, sin `molecule_id`, `spectrum_id` ni `label`: el cargador los mapea respectivamente a `molecule_id` y `label`, y sintetiza un `spectrum_id` determinista con el índice de fila. Test conserva sus `molecule_id` y `spectrum_id` explícitos. Para splits solo se leen estas tres columnas de metadatos por lotes.
+- Durante una pasada de metadatos se agregan por molécula el conteo, la etiqueta SMILES y una consulta de Clase 1 por semilla mediante reservoir sampling determinista. Después se canonicalizan y generan fingerprints ECFP4 en lotes acotados con hasta cuatro procesos, con avance registrado; no se duplican arreglos de picos ni se encolan todas las estructuras en el pool.
+- Antes de extraer features, cada SMILES se normaliza con el mismo `TautomerEnumerator` de `src/utils/metrics.py`; representaciones tautoméricas del mismo `InChIKey14` producen el mismo scaffold y ECFP4.
+- Val-Clase3 se selecciona por scaffolds completos. La búsqueda exacta de vecinos usa `rdkit.DataStructs.BulkTanimotoSimilarity` (bucle nativo C++) sobre fingerprints ECFP4 y convierte el resultado de cada consulta inmediatamente a un vector NumPy, evitando bucles de comparación en Python y buffers empaquetados temporales del tamaño de toda la biblioteca. Los dos recorridos de Tanimoto informan avance cada 1,000 consultas. Los scaffolds de train con similitud ECFP4 `>= 0.40` a cualquier molécula Val-Clase3 se ponen en cuarentena; se calcula y registra la media exacta de distancia al vecino más cercano y se exige `> 0.60`.
+- Cada semilla produce un JSON compacto con listas de moléculas, consultas retenidas, conteos y SHA-256 del train. Un iterador de particiones reconstruye los registros al leer el dataset; no se duplican IDs de espectro en el manifiesto.
+- H22 valida los tres nombres de archivo, el esquema, la disyunción y el límite de 25 MiB. Los Parquet crudos no se versionan.
+
 ## 4. Estandarización Química y Métricas
 - **Canonicalización InChIKey14**:
   Replicar de forma idéntica el evaluador de Kaggle utilizando `rdMolStandardize.TautomerEnumerator()` para eliminar discrepancias por formas tautoméricas o centros quirales.
