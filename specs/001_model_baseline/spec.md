@@ -14,7 +14,7 @@ Esta especificación define los requisitos formales funcionales y no funcionales
 - Ingestión inicial estructurada de `train.parquet` y `test.parquet`.
 - Limpieza física, filtrado de ruido (<1% pico base), eliminación de overhang de precursor y deisotopado explícito.
 - Normalización por tipo de aducto a masa neutra exacta.
-- Partición anti-leakage por `molecule_id` y clustering estructural por scaffold de Murcko simulando las 3 clases del test oculto de Kaggle (`Val-Clase1`, `Val-Clase2`, `Val-Clase3`) con 3 semillas.
+- Partición anti-leakage por `molecule_id` y scaffold de Murcko, con validación estructural ECFP4/Tanimoto para `Val-Clase3` y tres semillas.
 - Canonicalización estándar de tautómeros a InChIKey14 con RDKit `rdMolStandardize.TautomerEnumerator`.
 - Implementación de la métrica oficial MRR@25.
 - Motor de recuperación espectral baseline y formateador validado de `submission.csv`.
@@ -37,8 +37,10 @@ Esta especificación define los requisitos formales funcionales y no funcionales
 ### 2.2 Requisitos Basados en Eventos (Event-Driven Requirements)
 * **[REQ-EVT-01]**: CUANDO el pipeline reciba un espectro con fragmentos que superen $\text{precursor\_mz} + 2.0\text{ Da}$, el preprocesador debe descartar dichos fragmentos de la lista `ms2_mzs`.
 * **[REQ-EVT-02]**: CUANDO el pipeline procese un espectro de entrenamiento, el preprocesador debe descartar todos los picos con intensidad relativa inferior al 1% ($<0.01$) del pico base.
-* **[REQ-EVT-03]**: CUANDO el generador de splits cree las particiones locales, el sistema debe agrupar los datos por `molecule_id` asegurando que ninguna molécula pertenezca simultáneamente a train y a validation.
-* **[REQ-EVT-04]**: CUANDO el split de validación configure el subset `Val-Clase3`, el sistema debe aislar estructuras químicas con scaffolds de Murcko disjuntos y similitud Tanimoto ECFP4 $< 0.40$ respecto al train.
+* **[REQ-EVT-03]**: CUANDO el generador de splits cree las particiones locales, el sistema debe agrupar los datos por `molecule_id`; `Val-Clase2` y `Val-Clase3` no deben compartir moléculas con train, mientras que `Val-Clase1` debe excluir su espectro de consulta y puede conservar los demás espectros de esa molécula en la biblioteca.
+* **[REQ-EVT-04]**: CUANDO el split configure `Val-Clase3`, el sistema debe canonicalizar tautómeros con el enumerador compartido de `src/utils/metrics.py` antes de calcular scaffold Murcko y ECFP4; mantener los scaffolds de validación fuera de train, medir para cada molécula la distancia al vecino train más cercano y exigir una media estrictamente mayor que 0.60. Los scaffolds completos de vecinos con similitud de 0.40 o superior se excluirán de train.
+* **[REQ-EVT-08]**: CUANDO el sistema lea los Parquet oficiales de Kaggle, debe mapear `inchikey14` a `molecule_id` y `normalized_smiles` a `label` en train, conservar los `molecule_id`/`spectrum_id` explícitos de test y asignar al train un `spectrum_id` estable basado en la fila cuando el origen no lo incluya. Para generar splits solo debe leer metadatos por lotes, sin retener arreglos de picos del dataset completo.
+* **[REQ-EVT-09]**: CUANDO un consumidor lea un manifiesto compacto, debe poder reconstruir train y cada subset al recorrer el Parquet; el espectro de consulta de `Val-Clase1` debe excluirse de train.
 * **[REQ-EVT-05]**: CUANDO el baseline reciba un espectro de query, el motor de inferencia debe recuperar hasta 25 candidatos únicos ordenados por similitud de precursor y fragmentos.
 * **[REQ-EVT-06]**: CUANDO el preprocesador detecte patrones de picos isotópicos adyacentes (+1.0 Da, +2.0 Da), el sistema debe colapsar dichos picos a su especie monoisotópica principal antes del binning o cálculo de embeddings.
 * **[REQ-EVT-07]**: CUANDO se procese el campo `adduct`, el sistema debe normalizar `precursor_mz` a masa neutra exacta del analito antes de realizar cualquier estimación de fórmula molecular.
@@ -62,3 +64,5 @@ Esta especificación define los requisitos formales funcionales y no funcionales
 - Todas las funciones implementadas cuentan con tests unitarios con aserciones estrictas.
 - La ejecución de `pytest tests/ -v` finaliza con código de salida 0.
 - El archivo `submission.csv` generado cumple al 100% las especificaciones de Kaggle.
+- La generación produce manifiestos JSON para las semillas 42, 1337 y 2026; cada uno registra la huella SHA-256 del train y ocupa menos de 25 MiB.
+- Las pruebas de split comprueban disyunción, exclusión de consulta, reproducibilidad y distancia media Val-Clase3 a su vecino train más cercano mayor que 0.60.

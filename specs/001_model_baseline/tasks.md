@@ -40,21 +40,24 @@
 - [x] `[DEV1-T2.5]` [RF: REQ-EVT-06] Implementar algoritmo de deisotopado explícito colapsando isotopos (+1, +2 Da) en `src/data/deisotoper.py`.  
   *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Test unitario con pares isotópicos sintéticos passing.
 
-- [x] `[DEV1-T2.6]` [RF: REQ-STA-01] Implementar cargador eficiente de `train.parquet` y `test.parquet` por chunks en `src/data/loader.py`.  
-  *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Test de lectura con parquet sintético passing en $< 2$ s.
+- [x] `[DEV1-T2.6]` [RF: REQ-STA-01, REQ-EVT-08] Adaptar el cargador por lotes al esquema oficial: `inchikey14`/`normalized_smiles` en train y `molecule_id`/`spectrum_id` en test; sintetizar IDs de espectro estables para train.
+  *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Tests de lectura para ambos esquemas passing y lectura real de los metadatos oficiales sin cargar arreglos de picos.
 
 ---
 
 ## Bloque 3: Generador de Splits Anti-Leakage (Días 6-7)
 
-- [x] `[DEV1-T3.1]` [RF: REQ-EVT-03] Implementar partición disjunta por `molecule_id` en `src/data/splitter.py` garantizando intersección nula entre splits.  
-  *Estimación*: 30 min | *Dependencias*: T2.6 | *DoD*: Test de disyunción de conjuntos passing.
+- [x] `[DEV1-T3.1]` [RF: REQ-EVT-03] Particionar por `molecule_id` en `src/data/splitter.py`; Val-Clase2/3 quedan fuera de train y la consulta retenida de Val-Clase1 se excluye de la biblioteca.
+  *Estimación*: 30 min | *Dependencias*: T2.6 | *DoD*: Test de pertenencia por molécula y exclusión del espectro de consulta passing.
 
-- [x] `[DEV1-T3.2]` [RF: REQ-EVT-04] Implementar clustering estructural por scaffold de Murcko y similitud Tanimoto ECFP4 para aislar `Val-Clase3` de train.  
-  *Estimación*: 30 min | *Dependencias*: T3.1 | *DoD*: Test que comprueba que la distancia Tanimoto promedio entre Val-Clase3 y Train sea $> 0.60$.
+- [x] `[DEV1-T3.2]` [RF: REQ-EVT-04] Canonicalizar tautómeros, agrupar scaffolds Murcko y excluir scaffolds vecinos por ECFP4/Tanimoto para aislar `Val-Clase3` de train.
+  *Estimación*: 30 min | *Dependencias*: T3.1 | *DoD*: Tests de tautómeros equivalentes, equivalencia de similitud exacta con RDKit y distancia media de cada molécula Val-Clase3 a su vecino Train más cercano $> 0.60$; búsqueda masiva delegada a `BulkTanimotoSimilarity` nativo.
 
-- [x] `[DEV1-T3.3]` [RF: REQ-UBI-04, REQ-EVT-04] Generar subsets de validación `Val-Clase1`, `Val-Clase2` y `Val-Clase3` para 3 semillas (`seed=42`, `seed=1337`, `seed=2026`) y guardar en `data/splits/`.  
-  *Estimación*: 25 min | *Dependencias*: T3.2 | *DoD*: Archivos de índices generados en `data/splits/` con metadata JSON.
+- [x] `[DEV1-T3.3]` [RF: REQ-UBI-04, REQ-EVT-04] Generar manifiestos de validación para las semillas `42`, `1337` y `2026` desde `train.parquet`, leyendo metadatos por lotes y guardando JSON compactos en `data/splits/`.
+  *Estimación*: 25 min | *Dependencias*: T3.2 | *DoD*: Los tres archivos contienen pertenencia por molécula, consultas retenidas de Clase 1, conteos, semilla y SHA-256 del train; cada uno es menor a 25 MiB.
+
+- [x] `[DEV1-T3.4]` Validar manifiestos con el hook H22 y permitir versionar únicamente los tres JSON esperados.
+  *Estimación*: 20 min | *Dependencias*: T3.3 | *DoD*: Selftest cubre manifiestos válidos, fuga, archivo ausente, semilla incorrecta y archivo mayor a 25 MiB; ningún Parquet crudo queda permitido en Git.
 
 ---
 

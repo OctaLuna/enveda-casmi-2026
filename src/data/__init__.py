@@ -27,16 +27,18 @@ from src.data.formula_estimator import (
     hill_formula,
 )
 from src.data.loader import (
+    iter_spectrum_metadata,
     iter_spectrum_records,
     load_spectrum_records,
     validate_parquet_schema,
 )
 from src.data.preprocessor import SpectrumPreprocessor
-from src.data.spectrum_parser import SpectrumRecord
+from src.data.spectrum_parser import SpectrumMetadata, SpectrumRecord
 from src.data.splitter import (
     StructuralSplitter,
     compute_molecular_scaffold,
     generate_and_save_splits,
+    iter_records_for_split,
 )
 
 __all__ = [
@@ -45,6 +47,7 @@ __all__ = [
     "CandidateFormula",
     "CandidateRecord",
     "FormulaEstimator",
+    "SpectrumMetadata",
     "SpectrumPreprocessor",
     "SpectrumRecord",
     "StructuralSplitter",
@@ -59,6 +62,8 @@ __all__ = [
     "generate_and_save_splits",
     "hill_formula",
     "is_chemically_valid_formula",
+    "iter_records_for_split",
+    "iter_spectrum_metadata",
     "iter_spectrum_records",
     "load_spectrum_records",
     "normalize_adduct_string",

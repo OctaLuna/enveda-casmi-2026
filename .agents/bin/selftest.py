@@ -119,12 +119,38 @@ def test_h22_split_leakage():
     # Bloquear split con fuga
     p_bad = {"paths": [str(FIXTURES_DIR / "leakage_split.json")]}
     res_bad = run_hook_proc("domain/split_leakage_guard.py", p_bad)
-    report("H22: Bloquear split con intersección no vacía", res_bad.returncode == 2)
+    report("H22: Bloquear split con intersecci?n no vac?a", res_bad.returncode == 2)
 
-    # Permitir split válido
+    # Permitir un manifiesto compacto que cumple el esquema real
     p_ok = {"paths": [str(FIXTURES_DIR / "valid_split.json")]}
     res_ok = run_hook_proc("domain/split_leakage_guard.py", p_ok)
-    report("H22: Permitir split disjunto", res_ok.returncode == 0)
+    report("H22: Permitir manifiesto v?lido", res_ok.returncode == 0)
+
+    # Bloquear una carpeta vac?a cuando se solicita validar los artefactos
+    with tempfile.TemporaryDirectory() as temp_dir:
+        res_missing = run_hook_proc("domain/split_leakage_guard.py", {"paths": [temp_dir]})
+        report("H22: Bloquear manifiestos ausentes", res_missing.returncode == 2)
+
+    # Bloquear una semilla distinta a las tres autorizadas
+    with tempfile.TemporaryDirectory() as temp_dir:
+        wrong_seed = Path(temp_dir) / "split_seed_7.json"
+        manifest = json.loads(
+            (FIXTURES_DIR / "valid_split.json").read_text(encoding="utf-8")
+        )
+        manifest["metadata"]["seed"] = 7
+        wrong_seed.write_text(json.dumps(manifest), encoding="utf-8")
+        res_wrong_seed = run_hook_proc(
+            "domain/split_leakage_guard.py", {"paths": [str(wrong_seed)]}
+        )
+        report("H22: Bloquear semilla incorrecta", res_wrong_seed.returncode == 2)
+
+    # Bloquear un manifiesto que supera el l?mite configurado de Git
+    with tempfile.TemporaryDirectory() as temp_dir:
+        oversized = Path(temp_dir) / "oversized.json"
+        with oversized.open("wb") as file_obj:
+            file_obj.truncate(25 * 1024 * 1024 + 1)
+        res_large = run_hook_proc("domain/split_leakage_guard.py", {"paths": [str(oversized)]})
+        report("H22: Bloquear manifiesto grande", res_large.returncode == 2)
 
 
 def test_h23_metric_test():
