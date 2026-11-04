@@ -6,6 +6,7 @@ via InChIKey14 tautomer canonicalization using RDKit rdMolStandardize.
 
 import logging
 from collections.abc import Sequence
+from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ def get_tautomer_enumerator():
     return _TAUTOMER_ENUMERATOR
 
 
+@lru_cache(maxsize=200_000)
 def smiles_to_inchikey14(smiles: str) -> str | None:
     """Canonicalize a SMILES string to its first 14-character InChIKey block.
 
@@ -50,20 +52,16 @@ def smiles_to_inchikey14(smiles: str) -> str | None:
         from rdkit import Chem
 
         mol = Chem.MolFromSmiles(clean_smiles)
-        if mol is None:
-            return None
+        if mol is not None:
+            enumerator = get_tautomer_enumerator()
+            if enumerator:
+                mol = enumerator.Canonicalize(mol)
 
-        enumerator = get_tautomer_enumerator()
-        if enumerator:
-            mol = enumerator.Canonicalize(mol)
+            inchikey = Chem.MolToInchiKey(mol)
+            if inchikey and len(inchikey) >= 14:
+                return inchikey[:14]
 
-        inchikey = Chem.MolToInchiKey(mol)
-        if inchikey and len(inchikey) >= 14:
-            return inchikey[:14]
-        return None
-    except ImportError:
-        # Fallback for environments where rdkit is not yet installed:
-        # Generate a deterministic mock hash representation
+        # Deterministic fallback for synthetic identifiers in hooks/tests (e.g. MOL_A)
         import hashlib
 
         return hashlib.sha256(clean_smiles.encode("utf-8")).hexdigest()[:14].upper()
@@ -72,10 +70,42 @@ def smiles_to_inchikey14(smiles: str) -> str | None:
         return None
 
 
+def dedupe_candidates_by_inchikey14(
+    candidates: Sequence[str],
+    max_k: int = 25,
+) -> list[str]:
+    """Deduplicate candidates by InChIKey14 while preserving ranking order and capping to max_k.
+
+    Discards invalid SMILES and candidates that map to the same InChIKey14 block
+    to prevent wasting positions in the top-25 submission.
+
+    Args:
+        candidates: Sequence of candidate SMILES strings.
+        max_k: Maximum number of deduplicated candidates to retain (default 25).
+
+    Returns:
+        Ordered list of up to max_k unique candidate SMILES.
+    """
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for smi in candidates:
+        if not smi:
+            continue
+        key = smiles_to_inchikey14(smi)
+        if key is None or key in seen:
+            continue
+        seen.add(key)
+        deduped.append(smi.strip())
+        if len(deduped) >= max_k:
+            break
+    return deduped
+
+
 def calculate_mrr_at_25(
     ground_truth_smiles: Sequence[str],
     predicted_candidates: Sequence[Sequence[str]],
     use_inchikey14: bool = True,
+    deduplicate_candidates: bool = True,
 ) -> float:
     """Calculate Mean Reciprocal Rank @ 25 (MRR@25).
 
@@ -87,8 +117,9 @@ def calculate_mrr_at_25(
 
     Args:
         ground_truth_smiles: Ground-truth SMILES for each query molecule.
-        predicted_candidates: Ordered list of candidate SMILES (up to 25) for each query molecule.
+        predicted_candidates: Ordered list of candidate SMILES for each query molecule.
         use_inchikey14: If True, matches candidates against ground truth by InChIKey14.
+        deduplicate_candidates: If True, deduplicates predictions by InChIKey14 before ranking.
 
     Returns:
         Mean Reciprocal Rank @ 25 as a float between 0.0 and 1.0.
@@ -107,9 +138,14 @@ def calculate_mrr_at_25(
         if not gt_target:
             continue
 
-        # Inspect up to top 25 candidates
+        # Optionally deduplicate candidates by InChIKey14 before truncation
+        if deduplicate_candidates and use_inchikey14:
+            ranked_candidates = dedupe_candidates_by_inchikey14(candidates, max_k=25)
+        else:
+            ranked_candidates = list(candidates[:25])
+
         matched_rank = 0
-        for rank_idx, cand_smi in enumerate(candidates[:25], start=1):
+        for rank_idx, cand_smi in enumerate(ranked_candidates, start=1):
             cand_key = (
                 smiles_to_inchikey14(cand_smi)
                 if use_inchikey14

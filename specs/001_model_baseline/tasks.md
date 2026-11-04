@@ -34,26 +34,26 @@
 - [x] `[DEV1-T2.3]` [RF: REQ-EVT-01] Implementar método `filter_precursor_overhang(mass_tolerance_da=2.0)` en `SpectrumRecord` para eliminar picos superiores al precursor.  
   *Estimación*: 20 min | *Dependencias*: T2.1 | *DoD*: `test_filter_precursor_overhang` passing.
 
-- [ ] `[DEV1-T2.4]` [RF: REQ-OPT-01, REQ-EVT-07] Implementar normalizador de masa neutra a partir del campo `adduct` (`[M+H]+`, `[M-H]-`, `[M+Na]+`, etc.) en `src/data/adduct_normalizer.py`.  
+- [x] `[DEV1-T2.4]` [RF: REQ-OPT-01, REQ-EVT-07] Implementar normalizador de masa neutra a partir del campo `adduct` (`[M+H]+`, `[M-H]-`, `[M+Na]+`, etc.) en `src/data/adduct_normalizer.py`.  
   *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Test unitario con tabla de aductos Bruker timsTOF passing.
 
-- [ ] `[DEV1-T2.5]` [RF: REQ-EVT-06] Implementar algoritmo de deisotopado explícito colapsando isotopos (+1, +2 Da) en `src/data/deisotoper.py`.  
+- [x] `[DEV1-T2.5]` [RF: REQ-EVT-06] Implementar algoritmo de deisotopado explícito colapsando isotopos (+1, +2 Da) en `src/data/deisotoper.py`.  
   *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Test unitario con pares isotópicos sintéticos passing.
 
-- [ ] `[DEV1-T2.6]` [RF: REQ-STA-01] Implementar cargador eficiente de `train.parquet` y `test.parquet` por chunks en `src/data/loader.py`.  
+- [x] `[DEV1-T2.6]` [RF: REQ-STA-01] Implementar cargador eficiente de `train.parquet` y `test.parquet` por chunks en `src/data/loader.py`.  
   *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Test de lectura con parquet sintético passing en $< 2$ s.
 
 ---
 
 ## Bloque 3: Generador de Splits Anti-Leakage (Días 6-7)
 
-- [ ] `[DEV1-T3.1]` [RF: REQ-EVT-03] Implementar partición disjunta por `molecule_id` en `src/data/splitter.py` garantizando intersección nula entre splits.  
+- [x] `[DEV1-T3.1]` [RF: REQ-EVT-03] Implementar partición disjunta por `molecule_id` en `src/data/splitter.py` garantizando intersección nula entre splits.  
   *Estimación*: 30 min | *Dependencias*: T2.6 | *DoD*: Test de disyunción de conjuntos passing.
 
-- [ ] `[DEV1-T3.2]` [RF: REQ-EVT-04] Implementar clustering estructural por scaffold de Murcko y similitud Tanimoto ECFP4 para aislar `Val-Clase3` de train.  
+- [x] `[DEV1-T3.2]` [RF: REQ-EVT-04] Implementar clustering estructural por scaffold de Murcko y similitud Tanimoto ECFP4 para aislar `Val-Clase3` de train.  
   *Estimación*: 30 min | *Dependencias*: T3.1 | *DoD*: Test que comprueba que la distancia Tanimoto promedio entre Val-Clase3 y Train sea $> 0.60$.
 
-- [ ] `[DEV1-T3.3]` [RF: REQ-UBI-04, REQ-EVT-04] Generar subsets de validación `Val-Clase1`, `Val-Clase2` y `Val-Clase3` para 3 semillas (`seed=42`, `seed=1337`, `seed=2026`) y guardar en `data/splits/`.  
+- [x] `[DEV1-T3.3]` [RF: REQ-UBI-04, REQ-EVT-04] Generar subsets de validación `Val-Clase1`, `Val-Clase2` y `Val-Clase3` para 3 semillas (`seed=42`, `seed=1337`, `seed=2026`) y guardar en `data/splits/`.  
   *Estimación*: 25 min | *Dependencias*: T3.2 | *DoD*: Archivos de índices generados en `data/splits/` con metadata JSON.
 
 ---
@@ -66,8 +66,11 @@
 - [ ] `[DEV2-T4.2]` [RF: REQ-OPT-02] Integrar similitud de coseno y entropía espectral básica (`matchms`) en `src/models/retrieval/spectral_similarity.py`.  
   *Estimación*: 30 min | *Dependencias*: T4.1 | *DoD*: Test comparativo de similitud de espectros sintéticos passing.
 
-- [ ] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
-  *Estimación*: 30 min | *Dependencias*: T1.3, T3.3, T4.1 | *DoD*: Reporte generado en consola y exportado a markdown con los 3 scores.
+- [x] `[DEV3-T4.5]` (Sprint 1: `DEV3-1.2`) [RF: REQ-EVT-05, REQ-ERR-03, REQ-STA-02, REQ-UBI-04] Implementar orquestador baseline de extremo a extremo `BaselinePipeline` en `src/api/baseline_pipeline.py`: preprocesa (`SpectrumPreprocessor`), indexa train (`BaselineSpectralMatcher.fit`), agrupa los espectros de query por `molecule_id`, fusiona los rankings por espectro (suma de puntaje reciproco de rango, desempate determinista), trunca a 25 y devuelve `dict[molecule_id, list[smiles]]` listo para `write_submission_csv`. Fija `set_seed(42)`; todo `molecule_id` de query aparece en la salida (lista vacia si no hay candidatos).  
+  *Estimacion*: 30 min | *Dependencias*: T1.4, T2.x (preprocesador), T4.1 | *DoD*: `tests/test_baseline_pipeline.py` passing con datos sinteticos (fusion multi-espectro, truncado a 25, cobertura de todos los `molecule_id`, determinismo, y round-trip con `validate_submission_csv`).
 
-- [ ] `[DEV3-T4.4]` [RF: REQ-ERR-03, REQ-STA-01] Implementar pipeline completo de generación de `submission.csv` para `test.parquet` usando el baseline y validar formato final.  
-  *Estimación*: 25 min | *Dependencias*: T1.4, T4.1 | *DoD*: Archivo `submission.csv` generado y validado con `validate_submission_csv()`.
+- [x] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
+  *Estimación*: 30 min | *Dependencias*: T1.3, T3.3, T4.1, T4.5 | *DoD*: Reporte generado en consola y exportado a markdown con los 3 scores.
+
+- [x] `[DEV3-T4.4]` [RF: REQ-ERR-03, REQ-STA-01] Implementar pipeline completo de generación de `submission.csv` para `test.parquet` usando el baseline y validar formato final.  
+  *Estimación*: 25 min | *Dependencias*: T1.4, T4.1, T4.5 | *DoD*: Archivo `submission.csv` generado y validado con `validate_submission_csv()`.
