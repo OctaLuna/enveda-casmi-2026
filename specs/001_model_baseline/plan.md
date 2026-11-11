@@ -46,6 +46,13 @@ Para establecer el punto de partida sin incurrir en deuda técnica ni modelos op
   - No requiere entrenamiento con GPU en esta etapa.
   - Sirve como prueba de humo (*smoke test*) para validar el arnés de evaluación local, el formato `submission.csv` y el cálculo de MRR@25 con InChIKey14.
 
+### 2.1 Similitud espectral de T4.2
+- La API pública recibe dos `SpectrumRecord` y una tolerancia configurable de coincidencia de fragmentos (0.02 Da por defecto), y devuelve un score finito entre 0 y 1.
+- El coseno empareja picos uno a uno dentro de la tolerancia, usando intensidades como vectores y normalización L2. Un pico no puede emparejarse con más de un pico del otro espectro.
+- La similitud de entropía normaliza intensidades no negativas a distribuciones de probabilidad, fusiona pares de picos coincidentes dentro de la misma tolerancia y usa la distancia de entropía espectral normalizada por `ln(4)`.
+- Entradas vacías, de intensidad total cero o con intensidades negativas/no finitas producen score 0. Las longitudes de m/z e intensidades deben coincidir; entradas incompatibles generan `ValueError`.
+- La implementación será independiente de mutaciones a los arreglos de `SpectrumRecord` y no requerirá dependencias que no estén instaladas en el entorno de desarrollo.
+
 ---
 
 ## 3. Estrategia de Partición Anti-Leakage (3 Subsets de Validación)

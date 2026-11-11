@@ -66,8 +66,8 @@
 - [x] `[DEV2-T4.1]` [RF: REQ-EVT-05] Implementar motor de coincidencia `BaselineSpectralMatcher` en `src/models/baseline_agent.py` basado en ventana de masa de precursor.  
   *Estimación*: 25 min | *Dependencias*: T2.1 | *DoD*: `test_baseline_matcher_fit_and_predict` passing.
 
-- [ ] `[DEV2-T4.2]` [RF: REQ-OPT-02] Integrar similitud de coseno y entropía espectral básica (`matchms`) en `src/models/retrieval/spectral_similarity.py`.  
-  *Estimación*: 30 min | *Dependencias*: T4.1 | *DoD*: Test comparativo de similitud de espectros sintéticos passing.
+- [x] `[DEV2-T4.2]` [RF: REQ-EVT-05] Implementar `cosine_similarity` y `spectral_entropy_similarity` para dos `SpectrumRecord` en `src/models/retrieval/spectral_similarity.py`, con tolerancia configurable (0.02 Da por defecto), score finito [0, 1], emparejamiento uno-a-uno de picos para coseno, y entropía sobre picos fusionados.
+  *Estimación*: 30 min | *Dependencias*: T2.1, T4.1 | *DoD*: Pruebas sintéticas para identidad, espectros disjuntos/parciales, tolerancia, entradas vacías/cero, intensidades inválidas y no mutación; suite relacionada passing.
 
 - [ ] `[DEV3-T4.3]` [RF: REQ-UBI-03] Implementar script ejecutable de benchmarking `scripts/evaluate_baseline.py` que cargue los splits, evalúe en las 3 clases y reporte MRR@25.  
   *Estimación*: 30 min | *Dependencias*: T1.3, T3.3, T4.1 | *DoD*: Reporte generado en consola y exportado a markdown con los 3 scores.
