@@ -66,8 +66,8 @@
 - [x] `[DEV2-T4.1]` [RF: REQ-EVT-05] Implementar motor de coincidencia `BaselineSpectralMatcher` en `src/models/baseline_agent.py` basado en ventana de masa de precursor.  
   *Estimación*: 25 min | *Dependencias*: T2.1 | *DoD*: `test_baseline_matcher_fit_and_predict` passing.
 
-- [ ] `[DEV2-T4.2]` [RF: REQ-OPT-02] Integrar similitud de coseno y entropía espectral básica (`matchms`) en `src/models/retrieval/spectral_similarity.py`.  
-  *Estimación*: 30 min | *Dependencias*: T4.1 | *DoD*: Test comparativo de similitud de espectros sintéticos passing.
+- [x] `[DEV2-T4.2]` [RF: REQ-EVT-05] Implementar `cosine_similarity` y `spectral_entropy_similarity` para dos `SpectrumRecord` en `src/models/retrieval/spectral_similarity.py`, con tolerancia configurable (0.02 Da por defecto), score finito [0, 1], emparejamiento uno-a-uno de picos para coseno, y entropía sobre picos fusionados.
+  *Estimación*: 30 min | *Dependencias*: T2.1, T4.1 | *DoD*: Pruebas sintéticas para identidad, espectros disjuntos/parciales, tolerancia, entradas vacías/cero, intensidades inválidas y no mutación; suite relacionada passing.
 
 - [x] `[DEV3-T4.5]` (Sprint 1: `DEV3-1.2`) [RF: REQ-EVT-05, REQ-ERR-03, REQ-STA-02, REQ-UBI-04] Implementar orquestador baseline de extremo a extremo `BaselinePipeline` en `src/api/baseline_pipeline.py`: preprocesa (`SpectrumPreprocessor`), indexa train (`BaselineSpectralMatcher.fit`), agrupa los espectros de query por `molecule_id`, fusiona los rankings por espectro (suma de puntaje reciproco de rango, desempate determinista), trunca a 25 y devuelve `dict[molecule_id, list[smiles]]` listo para `write_submission_csv`. Fija `set_seed(42)`; todo `molecule_id` de query aparece en la salida (lista vacia si no hay candidatos).  
   *Estimacion*: 30 min | *Dependencias*: T1.4, T2.x (preprocesador), T4.1 | *DoD*: `tests/test_baseline_pipeline.py` passing con datos sinteticos (fusion multi-espectro, truncado a 25, cobertura de todos los `molecule_id`, determinismo, y round-trip con `validate_submission_csv`).
