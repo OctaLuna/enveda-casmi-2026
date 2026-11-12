@@ -76,3 +76,34 @@ def test_markdown_report_contains_three_scores(records, split, tmp_path: Path):
     for name in ("Val-Clase1", "Val-Clase2", "Val-Clase3"):
         assert name in md
     assert "MRR@25" in md
+
+
+def _compact_manifest() -> dict:
+    return {
+        "schema_version": 1,
+        "train_molecule_ids": ["m1", "m4"],
+        "val_clase1_molecule_ids": ["m1"],
+        "val_clase1_query_spectrum_ids": ["m1_b"],
+        "val_clase2_molecule_ids": ["m2"],
+        "val_clase3_molecule_ids": ["m3"],
+        "metadata": {"seed": 42},
+    }
+
+
+def test_evaluate_split_supports_compact_manifest_from_a_stream(records):
+    scores = evaluate_split(iter(records), _compact_manifest())
+    assert scores["Val-Clase1"] == 1.0
+    assert scores["Val-Clase2"] == 0.0
+    assert scores["Val-Clase3"] == 0.0
+
+
+def test_compact_manifest_caps_queries_deterministically(records):
+    first = evaluate_split(iter(records), _compact_manifest(), max_queries_per_class=1)
+    second = evaluate_split(iter(records), _compact_manifest(), max_queries_per_class=1)
+    assert first == second
+
+
+def test_run_benchmark_accepts_a_record_factory(records, tmp_path: Path):
+    (tmp_path / "split_seed_42.json").write_text(json.dumps(_compact_manifest()))
+    result = run_benchmark(lambda: iter(records), tmp_path, seeds=(42,))
+    assert result["Val-Clase1"]["mean"] == 1.0
