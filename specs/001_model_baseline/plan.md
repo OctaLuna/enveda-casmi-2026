@@ -55,6 +55,19 @@ Para establecer el punto de partida sin incurrir en deuda técnica ni modelos op
 
 ---
 
+### 2.2 Integración del ranking baseline
+- `BaselineSpectralMatcher` permite `cosine` (por defecto) y `weighted_fusion`; esta última combina coseno y entropía con pesos configurables que suman 1 (default 0.5/0.5).
+- `predict_candidates()` devuelve candidatos tipados; `predict_top_k()` conserva compatibilidad y devuelve SMILES. Se deduplica por SMILES conservando el mejor score; los empates priorizan menor diferencia de precursor y luego SMILES en orden lexicográfico.
+- El benchmark compara ambas estrategias con split fijo, sin optimizar pesos sobre Val-Clase1.
+
+### 2.3 Benchmark DEV2-T4.4 en Kaggle
+- El benchmark evalúa todas las consultas de Val-Clase1 del manifiesto `split_seed_42.json`, sin muestrear ni ajustar pesos; registra MRR@25 y latencia por consulta para coseno y fusión 0.5/0.5.
+- En Val-Clase1, el `molecule_id` del parquet oficial contiene el InChIKey14. Las etiquetas SMILES recuperadas se mapean al `molecule_id` de su registro de train; se usa el núcleo de `calculate_mrr_at_25` sobre estas claves exactas, deduplicando antes del top-25. Esto reproduce la identidad del evaluador y evita depender de RDKit, que no está instalado en la imagen Kaggle offline. Las evaluaciones con candidatos fuera del train continúan usando la canonicalización RDKit de `src/utils/metrics.py`.
+- El evaluador falla explícitamente si faltan consultas, si una etiqueta no tiene ID oficial asociado o si una etiqueta mapea a varios IDs. Así, la ausencia de RDKit no puede convertirse silenciosamente en MRR cero.
+- El matcher acota candidatos con búsqueda binaria por masa; el emparejamiento de picos usa distancias vectorizadas con el mismo desempate determinista y regla uno-a-uno. La estrategia `cosine` no calcula entropía. Estas optimizaciones preservan el ranking y hacen viable la ejecución completa dentro del límite de Kaggle.
+
+- Resultados, duración observada y condiciones de reproducción: [reporte de DEV2-T4.4](../../docs/benchmarks/DEV2-T4.4-valclase1-seed42.md).
+
 ## 3. Estrategia de Partición Anti-Leakage (3 Subsets de Validación)
 
 El test oculto de Kaggle contiene ~400 moléculas distribuidas en 3 clases. Para evitar falsos positivos y sobreajuste:

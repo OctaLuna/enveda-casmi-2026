@@ -43,6 +43,8 @@ Esta especificación define los requisitos formales funcionales y no funcionales
 * **[REQ-EVT-09]**: CUANDO un consumidor lea un manifiesto compacto, debe poder reconstruir train y cada subset al recorrer el Parquet; el espectro de consulta de `Val-Clase1` debe excluirse de train.
 * **[REQ-EVT-10]**: CUANDO `collision_energy_ev` sea nulo, una lista vacía o una lista con varias energías, el cargador debe conservar el espectro y representar la energía como `float('nan')`. Debe conservar como `float` un valor numérico escalar o el valor único de una lista; una lista con un único valor nulo también se representa como `NaN`.
 * **[REQ-EVT-05]**: CUANDO el baseline reciba un espectro de query, el motor de inferencia debe recuperar hasta 25 candidatos únicos ordenados por similitud de precursor y fragmentos.
+* **[REQ-EVT-10]**: CUANDO el baseline compare espectros, debe permitir seleccionar coseno o fusión ponderada de coseno y entropía, cuyos pesos suman 1; coseno será la estrategia por defecto y ordenará por score descendente, distancia absoluta de precursor ascendente como primer desempate, y SMILES ascendente como desempate final.
+* **[REQ-UBI-05]**: El contrato de candidato incluirá SMILES, score finito y rango positivo; se reutilizará `SpectrumRecord` de `src.data.spectrum_parser`.
 * **[REQ-EVT-06]**: CUANDO el preprocesador detecte patrones de picos isotópicos adyacentes (+1.0 Da, +2.0 Da), el sistema debe colapsar dichos picos a su especie monoisotópica principal antes del binning o cálculo de embeddings.
 * **[REQ-EVT-07]**: CUANDO se procese el campo `adduct`, el sistema debe normalizar `precursor_mz` a masa neutra exacta del analito antes de realizar cualquier estimación de fórmula molecular.
 
@@ -66,4 +68,5 @@ Esta especificación define los requisitos formales funcionales y no funcionales
 - La ejecución de `pytest tests/ -v` finaliza con código de salida 0.
 - El archivo `submission.csv` generado cumple al 100% las especificaciones de Kaggle.
 - La generación produce manifiestos JSON para las semillas 42, 1337 y 2026; cada uno registra la huella SHA-256 del train y ocupa menos de 25 MiB.
+- El benchmark Val-Clase1 compara ambas estrategias en el mismo split y reporta MRR@25 y latencia media, sin ajustar pesos en el split evaluado.
 - Las pruebas de split comprueban disyunción, exclusión de consulta, reproducibilidad y distancia media Val-Clase3 a su vecino train más cercano mayor que 0.60.
