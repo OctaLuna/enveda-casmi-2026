@@ -2,7 +2,9 @@ import pytest
 
 from src.data.spectrum_parser import SpectrumRecord
 from src.models.retrieval.spectral_similarity import (
+    _matched_peak_pairs,
     cosine_similarity,
+    cosine_entropy_similarities,
     spectral_entropy_similarity,
 )
 
@@ -38,6 +40,17 @@ def test_cosine_uses_partial_matches_and_one_to_one_peak_matching():
     assert cosine_similarity(query, reference) == pytest.approx(0.5)
 
 
+def test_peak_matching_keeps_nearest_pair_and_deterministic_tie_order():
+    import numpy as np
+
+    assert _matched_peak_pairs(
+        np.array([0.0, 0.03]), np.array([0.02]), tolerance_da=0.03
+    ) == [(1, 0)]
+    assert _matched_peak_pairs(
+        np.array([0.0, 0.02]), np.array([0.01]), tolerance_da=0.02
+    ) == [(0, 0)]
+
+
 def test_tolerance_is_configurable():
     first = spectrum([50.0], [1.0])
     second = spectrum([50.03], [1.0])
@@ -46,6 +59,16 @@ def test_tolerance_is_configurable():
     assert spectral_entropy_similarity(
         first, second, tolerance_da=0.04
     ) == pytest.approx(1.0)
+
+
+def test_combined_similarity_reuses_matches_without_changing_scores():
+    first = spectrum([50.0, 60.0, 70.0], [0.2, 1.0, 0.6])
+    second = spectrum([50.01, 62.0, 70.02], [0.5, 0.8, 1.0])
+
+    cosine, entropy = cosine_entropy_similarities(first, second)
+
+    assert cosine == pytest.approx(cosine_similarity(first, second))
+    assert entropy == pytest.approx(spectral_entropy_similarity(first, second))
 
 
 @pytest.mark.parametrize("similarity", [cosine_similarity, spectral_entropy_similarity])

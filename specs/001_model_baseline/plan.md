@@ -55,6 +55,11 @@ Para establecer el punto de partida sin incurrir en deuda técnica ni modelos op
 
 ---
 
+### 2.2 Integración del ranking baseline
+- `BaselineSpectralMatcher` permite `cosine` (por defecto) y `weighted_fusion`; esta última combina coseno y entropía con pesos configurables que suman 1 (default 0.5/0.5).
+- `predict_candidates()` devuelve candidatos tipados; `predict_top_k()` conserva compatibilidad y devuelve SMILES. Se deduplica por SMILES conservando el mejor score y desempate lexicográfico.
+- El benchmark compara ambas estrategias con split fijo, sin optimizar pesos sobre Val-Clase1.
+
 ## 3. Estrategia de Partición Anti-Leakage (3 Subsets de Validación)
 
 El test oculto de Kaggle contiene ~400 moléculas distribuidas en 3 clases. Para evitar falsos positivos y sobreajuste:

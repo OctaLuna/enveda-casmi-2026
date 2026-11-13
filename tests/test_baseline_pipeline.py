@@ -57,7 +57,8 @@ def test_multi_spectrum_fusion_groups_by_molecule_id():
     ]
     preds = pipeline.predict(queries)
     assert list(preds) == ["q1"]
-    # Closest precursor wins in both spectra, so it must rank first after fusion.
+    # Equal fragment scores prefer the closest precursor; molecule-level fusion
+    # then keeps that candidate first across both query spectra.
     assert preds["q1"][0] == "CCO"
     assert len(preds["q1"]) == len(set(preds["q1"]))
 
