@@ -70,6 +70,7 @@ El test oculto de Kaggle contiene ~400 moléculas distribuidas en 3 clases. Para
 
 ## 3.1. Generación reproducible de manifiestos
 
+- El Parquet oficial almacena energías como listas: el cargador convierte las listas de un único valor a `float` y representa listas vacías, con varios valores o sin valor como `float('nan')`. Se preserva el espectro y el tipo de `SpectrumRecord`; las energías múltiples no se conservan en esta interfaz. Los consumidores que utilicen la energía deben identificar los valores no finitos y, si necesitan energías múltiples, leerlas del origen o ampliar la interfaz explícitamente.
 - El train oficial usa `inchikey14` y `normalized_smiles`, sin `molecule_id`, `spectrum_id` ni `label`: el cargador los mapea respectivamente a `molecule_id` y `label`, y sintetiza un `spectrum_id` determinista con el índice de fila. Test conserva sus `molecule_id` y `spectrum_id` explícitos. Para splits solo se leen estas tres columnas de metadatos por lotes.
 - Durante una pasada de metadatos se agregan por molécula el conteo, la etiqueta SMILES y una consulta de Clase 1 por semilla mediante reservoir sampling determinista. Después se canonicalizan y generan fingerprints ECFP4 en lotes acotados con hasta cuatro procesos, con avance registrado; no se duplican arreglos de picos ni se encolan todas las estructuras en el pool.
 - Antes de extraer features, cada SMILES se normaliza con el mismo `TautomerEnumerator` de `src/utils/metrics.py`; representaciones tautoméricas del mismo `InChIKey14` producen el mismo scaffold y ECFP4.
