@@ -74,8 +74,8 @@
 
 - [x] `[DEV2-T4.3]` [RF: REQ-EVT-10, REQ-UBI-05] Integrar estrategias seleccionables y contrato tipado de candidatos en `BaselineSpectralMatcher`, conservando `predict_top_k`.
   *DoD*: pruebas de selección, pesos, ranking, deduplicación y desempate determinista.
-- [ ] `[DEV2-T4.4]` [RF: REQ-EVT-10] Comparar coseno y fusión en Val-Clase1 y reportar MRR@25 y latencia media sin ajustar pesos en ese split.
-  *DoD*: reporte reproducible con split, semilla, estrategia, pesos y métricas.
+- [x] `[DEV2-T4.4]` [RF: REQ-EVT-10] Comparar coseno y fusión en Val-Clase1 y reportar MRR@25 y latencia media sin ajustar pesos en ese split.
+  *DoD*: cumplido: reporte reproducible con el ranking final y resultados completos del kernel Kaggle v19 [DEV2-T4.4 Val-Clase1 seed 42](../../docs/benchmarks/DEV2-T4.4-valclase1-seed42.md), kernel Kaggle v19 completado y pruebas focalizadas pasando.
 
 - [x] `[DEV3-T4.5]` (Sprint 1: `DEV3-1.2`) [RF: REQ-EVT-05, REQ-ERR-03, REQ-STA-02, REQ-UBI-04] Implementar orquestador baseline de extremo a extremo `BaselinePipeline` en `src/api/baseline_pipeline.py`: preprocesa (`SpectrumPreprocessor`), indexa train (`BaselineSpectralMatcher.fit`), agrupa los espectros de query por `molecule_id`, fusiona los rankings por espectro (suma de puntaje reciproco de rango, desempate determinista), trunca a 25 y devuelve `dict[molecule_id, list[smiles]]` listo para `write_submission_csv`. Fija `set_seed(42)`; todo `molecule_id` de query aparece en la salida (lista vacia si no hay candidatos).  
   *Estimacion*: 30 min | *Dependencias*: T1.4, T2.x (preprocesador), T4.1 | *DoD*: `tests/test_baseline_pipeline.py` passing con datos sinteticos (fusion multi-espectro, truncado a 25, cobertura de todos los `molecule_id`, determinismo, y round-trip con `validate_submission_csv`).
