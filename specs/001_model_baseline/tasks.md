@@ -43,6 +43,9 @@
 - [x] `[DEV1-T2.6]` [RF: REQ-STA-01, REQ-EVT-08] Adaptar el cargador por lotes al esquema oficial: `inchikey14`/`normalized_smiles` en train y `molecule_id`/`spectrum_id` en test; sintetizar IDs de espectro estables para train.
   *Estimación*: 30 min | *Dependencias*: T2.1 | *DoD*: Tests de lectura para ambos esquemas passing y lectura real de los metadatos oficiales sin cargar arreglos de picos.
 
+- [x] `[DEV1-T2.7]` [RF: REQ-EVT-10] Admitir energías de colisión nulas o representadas como listas en el cargador sin descartar espectros ni cambiar el tipo `float`.
+  *DoD*: Tests de regresión con valores nulo, cero, numérico y listas aprobados; pruebas del cargador y pipeline baseline aprobadas.
+
 ---
 
 ## Bloque 3: Generador de Splits Anti-Leakage (Días 6-7)

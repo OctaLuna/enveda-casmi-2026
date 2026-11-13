@@ -1,5 +1,7 @@
 """Unit tests for efficient Parquet dataset loader with PyArrow and Polars."""
 
+import math
+
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
@@ -183,6 +185,56 @@ def test_iter_spectrum_records_maps_kaggle_train_columns(sample_kaggle_train):
     assert records[0].label == (
         "O=C1NC(=O)c2cc(Nc3ccccc3)c(Nc3ccccc3)cc21"
     )
+
+
+def test_iter_spectrum_records_handles_null_and_zero_collision_energy(
+    sample_kaggle_train, tmp_path
+):
+    table = pq.read_table(sample_kaggle_train)
+    index = table.schema.get_field_index("collision_energy_ev")
+    table = table.set_column(
+        index, "collision_energy_ev", pa.array([None, 0.0], type=pa.float64())
+    )
+    parquet_path = tmp_path / "null_collision_energy.parquet"
+    pq.write_table(table, parquet_path)
+
+    records = list(iter_spectrum_records(parquet_path, batch_size=1))
+
+    assert len(records) == 2
+    assert math.isnan(records[0].collision_energy_ev)
+    assert records[0].spectrum_id == "train_row_0000000000"
+    assert records[1].collision_energy_ev == 0.0
+    assert records[1].spectrum_id == "train_row_0000000001"
+
+
+@pytest.mark.parametrize(
+    ("energy", "expected"),
+    [
+        ([40.0], 40.0),
+        ([0.0], 0.0),
+        (None, None),
+        ([], None),
+        ([None], None),
+        ([20.0, 40.0], None),
+    ],
+)
+def test_iter_spectrum_records_handles_list_collision_energy(
+    sample_kaggle_train, tmp_path, energy, expected
+):
+    table = pq.read_table(sample_kaggle_train).slice(0, 1)
+    index = table.schema.get_field_index("collision_energy_ev")
+    table = table.set_column(
+        index, "collision_energy_ev", pa.array([energy], type=pa.list_(pa.float64()))
+    )
+    parquet_path = tmp_path / "list_collision_energy.parquet"
+    pq.write_table(table, parquet_path)
+
+    record = next(iter_spectrum_records(parquet_path))
+
+    if expected is None:
+        assert math.isnan(record.collision_energy_ev)
+    else:
+        assert record.collision_energy_ev == expected
 
 
 def test_iter_spectrum_records_test_no_label(sample_parquet_test):
