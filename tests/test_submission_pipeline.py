@@ -83,3 +83,13 @@ def _drop_one(preds, output_path):
     from src.api.submission import write_submission_csv as real
 
     return real({k: v for k, v in list(preds.items())[:1]}, output_path)
+
+
+def test_generate_submission_restricts_library_to_given_molecules(parquets, tmp_path):
+    train, test = parquets
+    out = generate_submission(
+        train, test, tmp_path / "submission.csv", library_molecule_ids={"b"}
+    )
+    lines = out.read_text(encoding="utf-8").splitlines()
+    assert "q1," in lines  # molecule "a" (CCO) was excluded from the library
+    assert "q1,CCO" not in lines
