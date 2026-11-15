@@ -5,7 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from src.api.evaluation import evaluate_split, format_markdown_report, run_benchmark
+from src.api.evaluation import (
+    compare_class1_strategies,
+    evaluate_split,
+    format_markdown_report,
+    format_strategy_comparison,
+    run_benchmark,
+)
 from src.data.spectrum_parser import SpectrumRecord
 
 ETHANOL = "CCO"
@@ -107,3 +113,23 @@ def test_run_benchmark_accepts_a_record_factory(records, tmp_path: Path):
     (tmp_path / "split_seed_42.json").write_text(json.dumps(_compact_manifest()))
     result = run_benchmark(lambda: iter(records), tmp_path, seeds=(42,))
     assert result["Val-Clase1"]["mean"] == 1.0
+
+
+def test_class1_strategy_comparison_scores_query_and_formats_report(records):
+    result = compare_class1_strategies(
+        records,
+        {
+            "train_molecule_ids": ["m1"],
+            "val_clase1_query_spectrum_ids": ["m1_b"],
+        },
+    )
+
+    assert result["cosine"]["mrr_at_25"] == 1.0
+    assert result["weighted_fusion"]["mrr_at_25"] == 1.0
+    assert result["cosine"]["query_count"] == 1.0
+    assert result["weighted_fusion"]["query_count"] == 1.0
+
+    report = format_strategy_comparison(result, seed=42)
+    assert "Split seed: 42" in report
+    assert "| cosine | 1.00, 0.00 | 1.0000 |" in report
+    assert "| weighted_fusion | 0.50, 0.50 | 1.0000 |" in report

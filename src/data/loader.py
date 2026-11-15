@@ -139,6 +139,11 @@ def iter_spectrum_records(
 
         for i in range(num_rows):
             label = pydict[label_column][i] if label_column is not None else None
+            collision_energy = pydict["collision_energy_ev"][i]
+            if isinstance(collision_energy, list):
+                collision_energy = (
+                    collision_energy[0] if len(collision_energy) == 1 else None
+                )
             # Handle possible PyArrow scalar conversion or None
             if label is not None and not isinstance(label, str):
                 label = str(label)
@@ -156,7 +161,11 @@ def iter_spectrum_records(
                 ],
                 precursor_mz=float(pydict["precursor_mz"][i]),
                 adduct=str(pydict["adduct"][i]),
-                collision_energy_ev=float(pydict["collision_energy_ev"][i]),
+                collision_energy_ev=(
+                    float(collision_energy)
+                    if collision_energy is not None
+                    else float("nan")
+                ),
                 label=label,
             )
         row_offset += num_rows
