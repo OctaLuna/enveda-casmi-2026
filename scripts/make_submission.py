@@ -6,6 +6,7 @@ Usage:
 """
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -19,8 +20,21 @@ def main() -> None:
     parser.add_argument("--train", default="data/raw/train.parquet")
     parser.add_argument("--test", default="data/raw/test.parquet")
     parser.add_argument("--output", default="submission.csv")
+    parser.add_argument(
+        "--split-manifest",
+        default=None,
+        help="Indexa solo las moleculas train_molecule_ids de este manifiesto.",
+    )
     args = parser.parse_args()
-    print(generate_submission(args.train, args.test, args.output))
+    library = None
+    if args.split_manifest:
+        with open(args.split_manifest, encoding="utf-8") as f:
+            library = set(json.load(f)["train_molecule_ids"])
+    print(
+        generate_submission(
+            args.train, args.test, args.output, library_molecule_ids=library
+        )
+    )
 
 
 if __name__ == "__main__":

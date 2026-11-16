@@ -12,7 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.api.evaluation import format_markdown_report, run_benchmark
-from src.data.loader import load_spectrum_records
+from src.data.loader import iter_spectrum_records
 
 
 def main() -> None:
@@ -20,11 +20,22 @@ def main() -> None:
     parser.add_argument("--train", default="data/raw/train.parquet")
     parser.add_argument("--splits", default="data/splits")
     parser.add_argument("--output", default="reports/baseline_benchmark.md")
-    parser.add_argument("--max-records", type=int, default=None)
+    parser.add_argument(
+        "--max-queries",
+        type=int,
+        default=500,
+        help="Tope de queries por clase (muestreo determinista); 0 = todas.",
+    )
+    parser.add_argument("--seeds", type=int, nargs="+", default=[42, 1337, 2026])
     args = parser.parse_args()
 
-    records = load_spectrum_records(args.train, max_records=args.max_records)
-    report = format_markdown_report(run_benchmark(records, args.splits))
+    result = run_benchmark(
+        lambda: iter_spectrum_records(args.train),
+        args.splits,
+        seeds=args.seeds,
+        max_queries_per_class=args.max_queries or None,
+    )
+    report = format_markdown_report(result)
     print(report)
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
